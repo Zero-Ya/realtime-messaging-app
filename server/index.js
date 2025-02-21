@@ -31,5 +31,5 @@ app.use("/api", indexRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`My first Express app - listening on port ${PORT}!`);
+  console.log(`Express app running on port ${PORT}`);
 });

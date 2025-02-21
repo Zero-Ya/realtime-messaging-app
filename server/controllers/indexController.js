@@ -56,3 +56,14 @@ exports.register = [
 exports.logOut = async (req, res) => {
     req.logout(() => res.end())
 }
+
+exports.getAuthUser = async (req, res) => {
+    if (req.user) {
+        const authUser = await prisma.user.findUnique({
+            where: {
+                id: req.user.id
+            }
+        })
+        res.json({ authUser })
+    } else res.json({ msg: "No auth user" })
+}
