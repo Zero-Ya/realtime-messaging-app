@@ -1,6 +1,6 @@
 // Modules
 const express = require("express");
-const app = express();
+const { app, server } = require("./lib/socket.js");
 
 const passport = require("passport");
 const sessionConfig = require("./config/sessionConfig");
@@ -11,9 +11,10 @@ require("dotenv").config();
 
 // Routes
 const indexRoutes = require("./routes/index");
+const chatRoutes = require("./routes/chat");
+const messageRoutes = require("./routes/message");
 
-
-
+// Middlewares
 app.use(sessionConfig);
 app.use(passport.session());
 
@@ -26,10 +27,9 @@ app.use(cors())
 
 // API
 app.use("/api", indexRoutes);
+app.use("/api/chats", chatRoutes);
+app.use("/api/messages", messageRoutes);
 
 
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Express app running on port ${PORT}`);
-});
+server.listen(process.env.PORT, () => console.log(`App is running on port ${process.env.PORT}`));
