@@ -1,0 +1,94 @@
+import { create } from "zustand";
+import { io } from "socket.io-client";
+
+export const useAuthStore = create((set, get) => ({
+    authUser: null,
+
+    isCheckingAuth: true,
+    isUpdatingProfile: false,
+    isLoggingOut: false,
+
+    onlineUsers: [],
+    socket: null,
+
+    checkAuth: async() => {
+        try {
+            const res = await fetch("/api/authUser");
+            const data = await res.json();
+            set({ authUser: data });
+            get().connectSocket();
+        } catch (error) {
+            console.log("Error in checkAuth:", error.message);
+            set({ authUser: null });
+        } finally {
+            set({ isCheckingAuth: false });
+        }
+    },
+
+    login: async (data) => {
+        try {
+            set({ authUser: data });
+            get().connectSocket();
+        } catch (error) {
+            // Toast
+        }
+    },
+
+    register: async (data) => {
+        try {
+            set({ authUser: data });
+            get().connectSocket();
+        } catch (error) {
+            // Toast
+        }
+    },
+
+    logout: async() => {
+        set({ isLoggingOut: true });
+        try {
+            await fetch("/api/logout");
+            set({ authUser: null });
+            get().disconnectSocket();
+        } catch (error) {
+            //  Toast
+        } finally {
+            set({ isLoggingOut: false });
+        }
+    },
+
+    updateProfile: async (data) => {
+        set({ isUpdatingProfile: true });
+        try {
+            const res = await fetch("/api/update-profile", { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            const authUserData = await res.json();
+            set({ authUser: authUserData });
+        } catch (error) {
+            // Toast
+        } finally {
+            set({ isUpdatingProfile: false });
+        }
+    },
+
+    connectSocket: () => {
+        const { authUser } = get();
+        if (!authUser || get().socket?.connected) return;
+
+        const socket = io("http://localhost:3000", {
+            query: {
+                userId: authUser.id
+            }
+        });
+        socket.connect();
+
+        set({ socket: socket });
+
+        socket.on("getOnlineUsers", (userIds) => {
+            set({ onlineUsers: userIds });
+        });
+    },
+
+    disconnectSocket: () => {
+        if (get().socket?.connected) get().socket.disconnect();
+    }
+
+}));

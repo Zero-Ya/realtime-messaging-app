@@ -5,6 +5,7 @@ const indexController = require("../controllers/indexController");
 router.post("/register", indexController.register);
 router.get("/logout", indexController.logOut);
 router.post("/login", indexController.logUserIn);
-router.get("/authUser", indexController.getAuthUser)
+router.put("/update-profile", indexController.updateProfile);
+router.get("/authUser", indexController.getAuthUser);
 
 module.exports = router;

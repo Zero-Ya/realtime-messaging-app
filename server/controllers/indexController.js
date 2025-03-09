@@ -2,6 +2,7 @@ const prisma = require("../db/prismaClient");
 const bcrypt = require("bcryptjs");
 // const jwt = require("jsonwebtoken");
 const passport = require("passport");
+const cloudinary = require("../lib/cloudinary");
 
 const { body, validationResult } = require("express-validator");
 
@@ -22,7 +23,7 @@ exports.logUserIn = async (req, res, next) => {
         if (!user) return res.status(401).json({ errMsg: "Incorrect username or password" })
         req.logIn(user, (err) => {
             if (err) return next(err)
-            res.json({ msg: "Login successful" })
+            res.json(user)
         })
     })(req, res, next)
 }
@@ -58,12 +59,29 @@ exports.logOut = async (req, res) => {
 }
 
 exports.getAuthUser = async (req, res) => {
-    if (req.user) {
-        const authUser = await prisma.user.findUnique({
-            where: {
-                id: req.user.id
-            }
+    try {
+        res.status(200).json(req.user)
+    } catch (error) {
+        console.log("Error in getAuthUser controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
+exports.updateProfile = async (req ,res) => {
+    const { profileImg } = req.body;
+    const authUserId = req.user.id;
+
+    if (!profileImg) return res.json({ msg: "No profile image is given" })
+    
+    const uploadResponse = await cloudinary.uploader.upload(profileImg);
+
+    if (authUserId) {
+        const updatedUser = await prisma.user.update({
+            data: {
+                profileImg: uploadResponse.secure_url
+            },
+            where: { id: authUserId }
         })
-        res.json({ authUser })
-    } else res.json({ msg: "No auth user" })
+        res.json(updatedUser)
+    } else res.json({ msg: "No user found" })
 }

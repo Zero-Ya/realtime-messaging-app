@@ -2,17 +2,25 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+// Store
+import { useAuthStore } from "../store/authStore";
+
 function LoginPage() {
+    const { login, isCheckingAuth } = useAuthStore();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     const navigate = useNavigate();
-
+    
     function handleSubmit(e) {
         e.preventDefault()
-        const user = { username, password }
-    
+        const user = { username, password };
+
+        setIsLoggingIn(true)
+        setError(false);
         fetch("/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -20,14 +28,20 @@ function LoginPage() {
         })
         .then(res => res.json())
         .then(data => {
-            if (data.errMsg) setError(true)
-            else navigate("/")
+            if (data.errMsg) {
+                setError(true);
+                return setIsLoggingIn(false);
+            }
+            setIsLoggingIn(false);
+            login(data);
+            // navigate("/");
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
     }
 
     return (
-        <div className="h-screen flex justify-center items-center">
+        !isCheckingAuth &&
+        <div className="h-screen bg-white flex justify-center items-center">
             <div className="w-10/12 sm:w-3/4 md:w-7/12 lg:w-2/5 xl:w-1/3 2xl:w-1/4 flex flex-col gap-4 p-6 items-center border rounded-md shadow">
                 <div className="text-lg sm:text-xl lg:text-2xl font-semibold">Login</div>
 
@@ -51,7 +65,9 @@ function LoginPage() {
 
                     <div className="flex flex-col gap-2">
                         <Link className="text-blue-600 hover:text-blue-800" to="/register">No account? Register now</Link>
-                        <button className="bg-blue-600 hover:bg-blue-800 text-white p-2 rounded-lg" type="submit" onClick={handleSubmit}>Login</button>
+                        <button className="bg-blue-600 hover:bg-blue-800 text-white p-2 rounded-lg" type="submit" onClick={handleSubmit} disabled={isLoggingIn}>
+                            {isLoggingIn ? 'Logging in...' : 'Login'}
+                        </button>
                     </div>
                 </form>
 

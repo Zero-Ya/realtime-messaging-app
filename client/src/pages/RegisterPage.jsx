@@ -1,20 +1,26 @@
 // Modules
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom";
+
+// Store
+import { useAuthStore } from "../store/authStore";
 
 function RegisterPage() {
+    const { register } = useAuthStore();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [errors, setErrors] = useState([]);
-
-    const navigate = useNavigate();
+    const [isRegistering, setIsRegistering] = useState(false);
 
     function handleSubmit(e) {
         e.preventDefault()
-        const user = { username , password }
+        const user = { username , password };
 
-        fetch("api/register", {
+        setIsRegistering(true);
+        setError(false);
+        fetch("/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user)
@@ -22,18 +28,18 @@ function RegisterPage() {
         .then(res => res.json())
         .then(data => {
             if (data.errors) {
-                setError(true)
-                setErrors(data.errors)
-            } else {
-                setError(false)
-                navigate("/login")
+                setError(true);
+                setErrors(data.errors);
+                return setIsRegistering(false);
             }
+            setIsRegistering(false);
+            register(data);
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err));
     }
 
     return (
-        <div className="h-screen flex justify-center items-center">
+        <div className="h-screen bg-white flex justify-center items-center">
             <div className="w-10/12 sm:w-3/4 md:w-7/12 lg:w-2/5 xl:w-1/3 2xl:w-1/4 flex flex-col gap-4 p-6 items-center border rounded-md shadow">
                 <div className="text-lg sm:text-xl lg:text-2xl font-semibold">Register</div>
 
@@ -59,7 +65,9 @@ function RegisterPage() {
 
                     <div className="flex flex-col gap-2">
                         <Link className="text-blue-600 hover:text-blue-800" to="/login">Already have an account? Login</Link>
-                        <button className="bg-blue-600 hover:bg-blue-800 text-white p-2 rounded-lg" type="submit" onClick={handleSubmit}>Register</button>
+                        <button className="bg-blue-600 hover:bg-blue-800 text-white p-2 rounded-lg" type="submit" onClick={handleSubmit}>
+                            {isRegistering ? 'Registering...' : 'Register'}
+                        </button>
                     </div>
                 </form>
 

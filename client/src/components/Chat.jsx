@@ -1,35 +1,51 @@
 // Modules
 import { useState, useEffect } from "react";
 
-// Icons
-import { FaCircleUser } from "react-icons/fa6";
+// Assets
+import avatar from "../assets/avatar.svg";
 
-function Chat({ userId, setSelectedChat, onlineUsers }) {
-    const [user, setUser] = useState(null)
+// Store
+import { useAuthStore } from "../store/authStore";
+import { useChatStore } from "../store/chatStore";
+
+function Chat({ userId }) {
+    const { onlineUsers } = useAuthStore();
+    const { setSelectedChat, messages } = useChatStore();
+
+    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        setIsLoading(true);
         fetch(`/api/chats/users/${userId}`, {
             method: "GET"
         })
         .then(res => res.json())
         .then(data => {
-            // console.log(data)
-            setUser(data)
+            setUser(data);
+            setIsLoading(false);
         })
-        .catch(err => console.log(err)) 
+        .catch(err => console.log(err))
     }, [])
 
-    return (
-        <>
-        <div className="flex items-center gap-2 hover:bg-slate-800" onClick={() => setSelectedChat(userId)}>
-            {(user) && 
-            <>
-            <FaCircleUser size={30} />
-            <div className="text-xl">{user.username}</div>
-            {(onlineUsers.includes(userId.toString())) ? <div>Online</div> : <div>Offline</div>}
-            </>}
+    if (isLoading) return (
+        <div className="px-4 py-3">
+            <div className="flex items-center gap-3">
+                <img className="size-8 rounded-full object-cover border-2" src={avatar} />
+                <div className="text-xl">Loading...</div>
+            </div>    
         </div>
-        </>
+    )
+
+    return (
+        <div className={`px-4 py-3 hover:bg-slate-800 ${userId === messages[0]?.receiverId && 'bg-slate-800'}`} onClick={() => setSelectedChat(userId)}>
+            {(user) && 
+            <div className="flex items-center gap-3">
+                <img className="size-8 rounded-full object-cover border-2" src={user.profileImg || avatar} />
+                <div className="text-xl">{user.username}</div>
+                <div className={`${(onlineUsers.includes(userId.toString())) ? 'bg-green-600' : 'bg-red-600'} rounded-full p-1`}></div>
+            </div>}
+        </div>
     )
 }
 

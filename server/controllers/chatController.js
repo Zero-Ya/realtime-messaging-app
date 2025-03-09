@@ -7,7 +7,8 @@ exports.getAllChats = async (req, res) => {
                 members: {
                     has: req.user.id
                 }
-            }
+            },
+            orderBy: { updatedAt: "desc" }
         });
         res.json(allChats);
     } else res.json({msg: "No user found"})
@@ -28,7 +29,7 @@ exports.createChat = async (req, res) => {
     } else res.json({msg: "No users found"})
 }
 
-exports.getUserChat = async (req, res) => {
+exports.getUserChatList = async (req, res) => {
     const userId = parseInt(req.params.userId);
 
     const userChat = await prisma.user.findUnique({
