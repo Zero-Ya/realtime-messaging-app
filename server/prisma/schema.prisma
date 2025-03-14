@@ -8,10 +8,11 @@ datasource db {
 }
 
 model User {
-  id         Int     @id @default(autoincrement())
-  username   String  @unique
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
   password   String
   profileImg String?
+  createdAt  DateTime @default(now())
 }
 
 model Chat {
@@ -20,11 +21,29 @@ model Chat {
   updatedAt DateTime? @updatedAt
 }
 
+model Group {
+  id        Int       @id @default(autoincrement())
+  name      String
+  members   Int[]
+  adminId   Int
+  groupImg  String?
+  updatedAt DateTime? @updatedAt
+}
+
+model GroupMessage {
+  id        Int      @id @default(autoincrement())
+  groupId   Int
+  senderId  Int
+  text      String
+  image     String?
+  createdAt DateTime @default(now())
+}
+
 model Message {
   id         Int      @id @default(autoincrement())
   chatId     Int
   senderId   Int
-  receiverId Int
+  receiverId Int?
   text       String
   image      String?
   createdAt  DateTime @default(now())

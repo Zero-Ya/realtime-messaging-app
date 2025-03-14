@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 export const useAuthStore = create((set, get) => ({
     authUser: null,
 
-    isCheckingAuth: true,
+    isCheckingAuth: false,
     isUpdatingProfile: false,
     isLoggingOut: false,
 
@@ -12,6 +12,7 @@ export const useAuthStore = create((set, get) => ({
     socket: null,
 
     checkAuth: async() => {
+        set({ isCheckingAuth: true })
         try {
             const res = await fetch("/api/authUser");
             const data = await res.json();
@@ -34,25 +35,19 @@ export const useAuthStore = create((set, get) => ({
         }
     },
 
-    register: async (data) => {
-        try {
-            set({ authUser: data });
-            get().connectSocket();
-        } catch (error) {
-            // Toast
-        }
-    },
-
     logout: async() => {
+
         set({ isLoggingOut: true });
         try {
             await fetch("/api/logout");
             set({ authUser: null });
             get().disconnectSocket();
+
         } catch (error) {
             //  Toast
         } finally {
             set({ isLoggingOut: false });
+            window.location.reload();
         }
     },
 
@@ -88,7 +83,10 @@ export const useAuthStore = create((set, get) => ({
     },
 
     disconnectSocket: () => {
-        if (get().socket?.connected) get().socket.disconnect();
+        if (get().socket?.connected) {
+            get().socket.disconnect();
+            set({ socket: null })
+        }
     }
 
 }));

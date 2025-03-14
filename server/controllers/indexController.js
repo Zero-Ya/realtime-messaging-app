@@ -67,6 +67,19 @@ exports.getAuthUser = async (req, res) => {
     }
 }
 
+// exports.getUser = async (req, res) => {
+//     const { userId } = req.params
+//     const theUser = await prisma.user.findUnique({
+//         where: { id: parseInt(userId) }
+//     })
+//     res.json(theUser);
+// }
+
+exports.getAllUsers = async (req, res) => {
+    const allUsers = await prisma.user.findMany();
+    res.json(allUsers);
+}
+
 exports.updateProfile = async (req ,res) => {
     const { profileImg } = req.body;
     const authUserId = req.user.id;

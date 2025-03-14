@@ -7,5 +7,7 @@ router.get("/logout", indexController.logOut);
 router.post("/login", indexController.logUserIn);
 router.put("/update-profile", indexController.updateProfile);
 router.get("/authUser", indexController.getAuthUser);
+// router.get("/user/:userId", indexController.getUser);
+router.get("/all-users", indexController.getAllUsers);
 
 module.exports = router;

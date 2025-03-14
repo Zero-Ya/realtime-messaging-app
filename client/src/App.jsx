@@ -7,9 +7,11 @@ import Navbar from "./components/Navbar";
 
 // Store
 import { useAuthStore } from "./store/authStore";
+import { useChatStore } from "./store/chatStore";
 
 function App() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
+    const { messages, chats } = useChatStore();
 
     const [navSelection, setNavSelection] = useState("chat");
 
@@ -17,9 +19,6 @@ function App() {
 
     useEffect(() => {
         checkAuth();
-    }, [checkAuth])
-
-    useEffect(() => {
         navigate("/");
     }, [])
 
@@ -30,7 +29,7 @@ function App() {
 
     
     if (isCheckingAuth && !authUser) return (
-        <div className="h-screen bg-green-600">Loading...</div>
+        <div className="w-full h-screen flex justify-center items-center text-3xl">Loading...</div>
     )
 
     return (

@@ -1,25 +1,23 @@
 // Modules
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Store
 import { useAuthStore } from "../store/authStore";
 
 function LoginPage() {
-    const { login, isCheckingAuth } = useAuthStore();
+    const { login, isCheckingAuth, authUser } = useAuthStore();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-    const navigate = useNavigate();
     
     function handleSubmit(e) {
         e.preventDefault()
         const user = { username, password };
 
-        setIsLoggingIn(true)
+        setIsLoggingIn(true);
         setError(false);
         fetch("/api/login", {
             method: "POST",
@@ -34,14 +32,13 @@ function LoginPage() {
             }
             setIsLoggingIn(false);
             login(data);
-            // navigate("/");
         })
         .catch(err => console.log(err));
     }
 
     return (
-        !isCheckingAuth &&
-        <div className="h-screen bg-white flex justify-center items-center">
+        (!isCheckingAuth && !authUser) &&
+        <div className="h-screen bg-white text-black flex justify-center items-center">
             <div className="w-10/12 sm:w-3/4 md:w-7/12 lg:w-2/5 xl:w-1/3 2xl:w-1/4 flex flex-col gap-4 p-6 items-center border rounded-md shadow">
                 <div className="text-lg sm:text-xl lg:text-2xl font-semibold">Login</div>
 

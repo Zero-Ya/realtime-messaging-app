@@ -1,22 +1,20 @@
 // Modules
 import { useState } from "react";
-import { Link } from "react-router-dom";
-
-// Store
-import { useAuthStore } from "../store/authStore";
+import { Link, useNavigate } from "react-router-dom";
 
 function RegisterPage() {
-    const { register } = useAuthStore();
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [errors, setErrors] = useState([]);
     const [isRegistering, setIsRegistering] = useState(false);
 
+    const navigate = useNavigate();
+
     function handleSubmit(e) {
         e.preventDefault()
         const user = { username , password };
+
 
         setIsRegistering(true);
         setError(false);
@@ -33,13 +31,13 @@ function RegisterPage() {
                 return setIsRegistering(false);
             }
             setIsRegistering(false);
-            register(data);
+            navigate("/login");
         })
         .catch(err => console.log(err));
     }
 
     return (
-        <div className="h-screen bg-white flex justify-center items-center">
+        <div className="h-screen bg-white text-black flex justify-center items-center">
             <div className="w-10/12 sm:w-3/4 md:w-7/12 lg:w-2/5 xl:w-1/3 2xl:w-1/4 flex flex-col gap-4 p-6 items-center border rounded-md shadow">
                 <div className="text-lg sm:text-xl lg:text-2xl font-semibold">Register</div>
 

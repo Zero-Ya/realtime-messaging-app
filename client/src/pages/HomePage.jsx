@@ -3,9 +3,11 @@ import { useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 
 // Components
-import ChatList from "../components/ChatList";
-import ChatPlace from "../components/ChatPlace";
-import Profile from "../components/Profile";
+import ChatList from "../components/Chats/ChatList";
+import ChatPlace from "../components/Chats/ChatPlace";
+import GroupPage from "../components/Groups/GroupPage";
+import PeoplePage from "../components/PeoplePage";
+import ProfilePage from "../components/ProfilePage";
 
 // Store
 import { useAuthStore } from "../store/authStore";
@@ -28,8 +30,16 @@ function HomePage() {
         getAllChats()
     }, [authUser])
 
+    if (navSelection === "group") return (
+        <GroupPage />
+    )
+
+    if (navSelection === "people") return (
+        <PeoplePage />
+    )
+
     if (navSelection === "profile") return (
-        <Profile />
+        <ProfilePage />
     )
 
     return (

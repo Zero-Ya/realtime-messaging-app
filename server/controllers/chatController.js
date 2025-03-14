@@ -19,6 +19,15 @@ exports.createChat = async (req, res) => {
         where: { username: req.body.username }
     })
 
+    const findChat = await prisma.chat.findFirst({
+        where: {
+            members: {
+                hasEvery: [req.user.id, otherUser.id]
+            }
+        }
+    })
+    if (findChat) return res.json({ msg: "Chat already exists" });
+
     if (req.user && otherUser) {
         const newChat = await prisma.chat.create({
             data: {

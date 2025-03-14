@@ -13,6 +13,7 @@ require("dotenv").config();
 const indexRoutes = require("./routes/index");
 const chatRoutes = require("./routes/chat");
 const messageRoutes = require("./routes/message");
+const groupRoutes = require("./routes/group");
 
 // Middlewares
 app.use(sessionConfig);
@@ -29,6 +30,7 @@ app.use(cors())
 app.use("/api", indexRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/groups", groupRoutes);
 
 
 

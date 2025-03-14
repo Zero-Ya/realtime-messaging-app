@@ -6,15 +6,27 @@ export const useChatStore = create((set, get) => ({
     chats: [],
     chat: null,
     selectedChat: null,
+    selectedUserChat: null,
     isChatsLoading: false,
     isMessagesLoading: false,
 
     setSelectedChat: (selectedChat) => set({ selectedChat }),
 
+    getUserChat: async (selectedUserId) => {
+        try {
+            const res = await fetch(`/api/chats/users/${selectedUserId}`);
+            const data = await res.json();
+            set({ selectedUserChat: data });
+        } catch (error) {
+            // 
+        }
+    },
+
     getAllChats: async () => {
         try {
             const res = await fetch("/api/chats/all");
             const data = await res.json();
+            if (data.msg) return
             set({ chats: data });
         } catch (error) {
             console.log(error)
@@ -50,10 +62,10 @@ export const useChatStore = create((set, get) => ({
     sendMessage: async (messageData) => {
         const { selectedChat, chat } = get();
         try {
-            const res = await fetch(`/api/messages/${chat.id}/${selectedChat}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(messageData) });
+            const res = await fetch(`/api/messages/chats/${chat.id}/${selectedChat}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(messageData) });
             const data = await res.json();
-            // set({ messages: [...messages, data] })
-            get().getMessages(selectedChat);
+            set({ messages: [...get().messages, data] });
+            get().getAllChats();
         } catch (error) {
             // 
         }

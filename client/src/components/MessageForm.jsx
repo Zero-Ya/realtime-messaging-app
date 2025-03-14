@@ -3,12 +3,14 @@ import { useState, useRef } from "react";
 
 // Store
 import { useChatStore } from "../store/chatStore";
+import { useGroupStore } from "../store/groupStore";
 
 // Assets
 import { FaRegImage, FaRegPaperPlane, FaCircleXmark } from "react-icons/fa6";
 
-function MessageForm() {
+function MessageForm({ selectedType }) {
     const { isMessagesLoading ,sendMessage } = useChatStore();
+    const { sendGroupMessage } = useGroupStore();
 
     const [message, setMessage] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
@@ -36,7 +38,8 @@ function MessageForm() {
         e.preventDefault();
         if (!message.trim() && !imagePreview) return
 
-        sendMessage({ text: message.trim(), image: imagePreview });
+        if (selectedType === "chat") sendMessage({ text: message.trim(), image: imagePreview });
+        if (selectedType === "group") sendGroupMessage({ text: message.trim(), image: imagePreview });
 
         setMessage("");
         removeImage();
@@ -46,11 +49,9 @@ function MessageForm() {
         !isMessagesLoading &&
         <div className="relative">
             {imagePreview && <>
-                <div className="absolute -top-44">
-                    {/* <div className="relative"> */}
-                        <img className="size-40 object-cover rounded-lg border-2" src={imagePreview} alt="Preview" />
-                        <button className="absolute -top-1.5 -right-1.5 bg-black" onClick={removeImage}><FaCircleXmark className="size-4" /></button>
-                    {/* </div> */}
+                <div className="absolute -top-44 right-28 ">
+                    <img className="size-40 object-cover rounded-lg border-2" src={imagePreview} alt="Preview" />
+                    <button className="absolute -top-1.5 -right-1.5 rounded-full bg-black" onClick={removeImage}><FaCircleXmark className="size-4" /></button>
                 </div>
             </>}
 
@@ -61,13 +62,12 @@ function MessageForm() {
                 <div className="flex items-center gap-8">
                     <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageChange} />
                     <button type="button" onClick={() => fileInputRef.current?.click()}>
-                        <FaRegImage className={`size-6 cursor-pointer ${imagePreview && 'text-sky-600'}`} />
+                        <FaRegImage className={`size-6 cursor-pointer hover:text-slate-400 ${imagePreview && 'text-sky-600'}`} />
                     </button>
 
                     <button disabled={!message.trim() && !imagePreview} type="submit" onClick={handleSendMessage}>
                         <FaRegPaperPlane className={`size-6 cursor-pointer ${(!message.trim() && !imagePreview) && 'text-slate-600'}`}/>
                     </button>
-                    {/* Try to break this code but clicking enter mulitple times */}
                 </div>
             </form>
         </div>
