@@ -1,16 +1,27 @@
 // Modules
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { format, formatDistance } from "date-fns";
 
 // Store
 import { useAuthStore } from "../store/authStore";
+import { useChatStore } from "../store/chatStore";
 
 // Assets
 import avatar from "../assets/avatar.svg";
-import { FaCamera } from "react-icons/fa6";
+import { FaCamera, FaRegCircleUser, FaRegIdCard, FaUserGroup } from "react-icons/fa6";
+
+// Components
+import ProfileFriend from "./ProfileFriend";
 
 function Profile() {
-    const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+    const { authUser, isUpdatingProfile, updateProfile, onlineUsers } = useAuthStore();
+    const { chats  } = useChatStore();
 
+    const allFriendsFlat = [].concat(...chats?.map((arr) => arr.members));
+    const allFriendsExcAuth = allFriendsFlat.filter((id) => id !== authUser.id)
+
+    const [allFriends, setAllFriends] = useState([]);
+    
     const [selectedImg, setSelectedImg] = useState(null);
 
     const handleImageUpload = async(e) => {
@@ -26,6 +37,17 @@ function Profile() {
             await updateProfile({ profileImg: base64Image });
         }
     }
+
+    useEffect(() => {
+        fetch("/api/all-users", {
+            method: "GET"
+        })
+        .then(res => res.json())
+        .then(data => {
+            setAllFriends(data.filter((user) => allFriendsExcAuth.includes(user.id)))
+        })
+        .catch(err => console.log(err))
+    }, [chats])
 
     return (
         authUser &&
@@ -44,8 +66,53 @@ function Profile() {
             </div>
             <div className="text-slate-400">{isUpdatingProfile ? 'Uploading...' : 'Click the camera icon to update your profile picture'}</div>
 
-            <div>{authUser.username}</div>
+            <div className="pt-4 w-full flex items-center gap-3">
+                <div className="w-1/2 flex flex-col gap-3">
+                    <div className="flex items-center gap-3 self-start">
+                        <FaRegCircleUser className="size-8" />
+                        <div className="text-2xl">Username:</div>
+                    </div>
+                    <div className="w-full py-4 bg-slate-950 rounded-lg">
+                        <div className="flex items-center gap-3 p-4 mx-4 bg-slate-900 rounded-lg">
+                            <img className="size-10 rounded-full object-cover border-2 bg-slate-800" src={authUser.profileImg || avatar} />
+                            <div className="text-2xl">{authUser.username}</div>
+                        </div>
+                    </div>
+                </div>
 
+                <div className="w-full h-full flex flex-col gap-3">
+                    <div className="flex items-center gap-3 self-start">
+                        <FaRegIdCard className="size-8" />
+                        <div className="text-2xl">Account Information:</div>
+                    </div>
+
+                    <div className="w-full h-full py-4 bg-slate-950 rounded-lg">
+                        <div className="h-full flex items-center">
+                            <div className="w-full h-full flex items-center gap-3 p-4 ml-4 bg-slate-900 rounded-lg text-2xl">
+                                <div>Member Since:</div>
+                                <div>{format(authUser.createdAt, "y-M-d")}</div>
+                            </div>
+        
+                            <div className="w-full h-full flex items-center gap-3 p-4 mx-4 bg-slate-900 rounded-lg text-2xl">
+                                <div>Account Status:</div>
+                                {(onlineUsers.includes(authUser.id.toString())) ? <div className="text-green-600">Online</div> : <div className="text-red-600">Offline</div>}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div className="pt-4 flex items-center gap-3 self-start">
+                <FaUserGroup className="size-8" />
+                <div className="text-2xl">Friends:</div>
+            </div>
+            <div className="w-full flex flex-col h-52 overflow-y-auto gap-6 py-4 bg-slate-950 rounded-lg">
+                {allFriends.map((user) => (
+                    <ProfileFriend key={user.id} user={user} />
+                ))}
+            </div>
 
         </div>
     )

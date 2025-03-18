@@ -61,3 +61,24 @@ exports.getChat = async (req, res) => {
     if (chat) res.json(chat)
     else res.json({ msg: "Chat not found" })
 }
+
+exports.removeChat = async (req, res) => {
+    const { userId } = req.body;
+    const authUserId = req.user.id;
+
+    if (!authUserId) return res.json({ msg: "No user found" });
+
+    const chat = await prisma.chat.findFirst({
+        where: {
+            members: { hasEvery: [authUserId, userId] }
+        }
+    })
+    
+    await prisma.message.deleteMany({
+        where: { chatId: chat.id }
+    })
+    const delChat = await prisma.chat.delete({
+        where: { id: chat.id }
+    })
+    res.json(delChat)
+}

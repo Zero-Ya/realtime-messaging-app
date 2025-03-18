@@ -34,8 +34,9 @@ model GroupMessage {
   id        Int      @id @default(autoincrement())
   groupId   Int
   senderId  Int
-  text      String
-  image     String?
+  text      String?
+  file      String?
+  fileSize  Int?
   createdAt DateTime @default(now())
 }
 
@@ -44,8 +45,9 @@ model Message {
   chatId     Int
   senderId   Int
   receiverId Int?
-  text       String
-  image      String?
+  text       String?
+  file       String?
+  fileSize   Int?
   createdAt  DateTime @default(now())
 }
 

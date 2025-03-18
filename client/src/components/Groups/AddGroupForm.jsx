@@ -11,7 +11,7 @@ import { useGroupStore } from "../../store/groupStore";
 
 function AddGroupForm() {
     const { authUser } = useAuthStore();
-    const { createGroup } = useGroupStore();
+    const { createGroup, isCreatingGroup } = useGroupStore();
     const { chats } = useChatStore();
 
     const allFriendsFlat = [].concat(...chats?.map((arr) => arr.members));
@@ -36,7 +36,6 @@ function AddGroupForm() {
         reader.onload = async () => {
             const base64Image = reader.result;
             setSelectedImg(base64Image);
-            await uploadGroupImage({ groupImg: base64Image });
         }
     }
 
@@ -45,9 +44,13 @@ function AddGroupForm() {
     }
 
     function handleCreateGroup (e, groupName) {
-        e.preventDefault()
-        const allMembersId = selectedMembers.map((member) => member.id)
-        createGroup(groupName, allMembersId)
+        e.preventDefault();
+        const allMembersId = selectedMembers.map((member) => member.id);
+
+        if (groupName === "" || allMembersId.length === 0) return console.log("Please fill the inputs"); 
+        // SET STATE TO ERRORS
+
+        createGroup(groupName, allMembersId, selectedImg);
     }
     
     useEffect(() => {
@@ -74,32 +77,23 @@ function AddGroupForm() {
         ))
     }, [query])
 
-    // function handleDebug() {
-    //     console.log(groupName)
-    //     console.log(selectedMembers)
-    //     console.log(selectedMembers.map((member) => member.id))
-    // }
-
     return (
-        <div className="w-full h-full flex flex-col justify-between">
-
-            {/* <button onClick={handleDebug}>ADIA</button> */}
-
+        <form className="w-full h-full flex flex-col justify-between">
             <div className="text-2xl mb-4">Create Group</div>
 
             <div>
                 <div className="pt-2 pb-6 border-y">
                     <div className="flex justify-between items-center text-lg">
                         <div className="text-2xl">Group Profile</div>
-                        <label onClick={() => handleImageUpload} className="bg-white text-black p-2 rounded-lg cursor-pointer">
-                            <input className="hidden" type="file" id="avatar-upload" accept="image/*" />
+                        <label onChange={handleImageUpload} className="bg-white text-black p-2 rounded-lg cursor-pointer">
+                            <input className="hidden" type="file" id="group-image-upload" accept="image/*" />
                             <div>Change</div>
                         </label>
                     </div>
 
                     <div className="flex justify-center">
                         <img className="size-44 rounded-full object-cover border-4 bg-slate-800 group-hover:border-slate-400"
-                        src={avatar} />
+                        src={selectedImg || avatar} />
                     </div>
                 </div>
 
@@ -107,13 +101,13 @@ function AddGroupForm() {
                     <div className="flex flex-col gap-2 text-lg">
                         <label htmlFor="groupName">Group name:</label>
                         <input className="p-1 bg-slate-800 rounded-lg border-2 border-slate-600" type="text" id="groupName" name="groupName"
-                        value={groupName} onChange={(e) => setGroupName(e.target.value)} />
+                        value={groupName} onChange={(e) => setGroupName(e.target.value)}/>
                     </div>
 
                     <div className="relative flex flex-col gap-2 text-lg">
                         <label htmlFor="groupMembers">Select members:</label>
                         <input onClick={() => setSelectMembers(!selectMembers)} className="p-1 bg-slate-800 rounded-lg border-2 border-slate-600" type="text" id="groupMembers" name="groupMembers"
-                        value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Select friends..." />
+                        value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Select friends..."/>
                         {(selectMembers && filteredUsers.length !== 0) && <div className="absolute top-20 flex flex-col gap-4 h-26 overflow-y-auto w-full bg-slate-950 border-2 border-slate-600 rounded-lg p-3">
                             {queryFilteredUsers.map((user) =>
                             <div key={user.id} className="flex items-center gap-2" onClick={() => addSelectedMember(user)}>
@@ -134,10 +128,10 @@ function AddGroupForm() {
             </div>
                         
             <div className="flex justify-end mt-2">
-                <button onClick={(e) => handleCreateGroup(e, groupName)} className="text-xl p-2 bg-white text-black rounded-lg">Create Group</button>
+                <button type="submit" onClick={(e) => handleCreateGroup(e, groupName)} className="text-xl p-2 bg-white text-black rounded-lg">{isCreatingGroup ? 'Creating...' : 'Create Group'}</button>
             </div>
                         
-        </div>
+        </form>
     )
 }
 

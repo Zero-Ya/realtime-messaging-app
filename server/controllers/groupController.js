@@ -2,32 +2,30 @@ const prisma = require("../db/prismaClient");
 const cloudinary = require("../lib/cloudinary");
 
 exports.createGroup = async (req, res) => {
-    const { groupName, membersId } = req.body;
+    const { groupName, membersId, groupImg } = req.body;
+    if (!req.user) return res.json({ msg: "No user found" });
 
-    if (!req.user) return res.json({ msg: "No user found" })
-
-    const ifGroup = await prisma.group.findFirst({
-        where: {
-            members: {
-                hasEvery: membersId
-            }
-        }
-    })
-
-    if (ifGroup) return res.json({ msg: "Group already exists" })
+    let imageUrl;
+    if (groupImg) {
+        const uploadResponse = await cloudinary.uploader.upload(groupImg)
+        imageUrl = uploadResponse.secure_url
+    }
 
     const newGroup = await prisma.group.create({
         data: {
             name: groupName,
             adminId: req.user.id,
-            members: membersId
+            members: membersId,
+            groupImg: imageUrl
         }
     })
     res.json(newGroup)
 }
 
 exports.getAllGroups = async (req, res) => {
-    const allGroups = await prisma.group.findMany()
+    const allGroups = await prisma.group.findMany({
+        orderBy: { updatedAt: "desc" }
+    })
     res.json(allGroups)
 }
 

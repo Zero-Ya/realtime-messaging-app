@@ -9,9 +9,12 @@ import Navbar from "./components/Navbar";
 import { useAuthStore } from "./store/authStore";
 import { useChatStore } from "./store/chatStore";
 
+// Assets
+import { FaCircleXmark } from "react-icons/fa6";
+
 function App() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
-    const { messages, chats } = useChatStore();
+    const { messages, chats, showImage, imageUrl, setShowImage, setImageUrl } = useChatStore();
 
     const [navSelection, setNavSelection] = useState("chat");
 
@@ -37,6 +40,15 @@ function App() {
             {authUser && <Navbar navSelectionState={{navSelection, setNavSelection}} />}
             
             <Outlet context={[navSelection, setNavSelection]} />
+
+            {showImage && <div className="z-99 fixed w-screen h-screen top-0 left-0 flex justify-center backdrop-blur-lg">
+                <img src={imageUrl} />
+                <FaCircleXmark className="size-5" onClick={() => {
+                    setShowImage(false)
+                    setImageUrl(null)
+                }} />
+            </div>}
+
         </div>
     )
 }

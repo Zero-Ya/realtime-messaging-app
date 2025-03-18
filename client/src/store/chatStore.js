@@ -10,6 +10,13 @@ export const useChatStore = create((set, get) => ({
     isChatsLoading: false,
     isMessagesLoading: false,
 
+    showImage: false,
+    imageUrl: null,
+
+    setShowImage: (showImage) => set({ showImage }),
+
+    setImageUrl: (imageUrl) => set({ imageUrl }),
+
     setSelectedChat: (selectedChat) => set({ selectedChat }),
 
     getUserChat: async (selectedUserId) => {
@@ -62,13 +69,21 @@ export const useChatStore = create((set, get) => ({
     sendMessage: async (messageData) => {
         const { selectedChat, chat } = get();
         try {
-            const res = await fetch(`/api/messages/chats/${chat.id}/${selectedChat}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(messageData) });
+            const res = await fetch(`/api/messages/chats/${chat.id}/${selectedChat}`, { method: "POST", body: messageData });
             const data = await res.json();
             set({ messages: [...get().messages, data] });
             get().getAllChats();
         } catch (error) {
             // 
         }
+    },
+
+    removeChat: () => {
+        set({ chat: null });
+        set({ messages: [] });
+        set({ selectedChat: null });
+        set({ selectedUserChat: null });
+        get().getAllChats();
     },
 
     subscribeToMessages: () => {

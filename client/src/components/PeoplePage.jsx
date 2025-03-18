@@ -9,35 +9,20 @@ import avatar from "../assets/avatar.svg";
 import { useAuthStore } from "../store/authStore";
 import { useChatStore } from "../store/chatStore";
 
+// Components
+import PeopleFriend from "./PeopleFriend";
+
 function PeoplePage() {
     const { authUser } = useAuthStore();
-    const { chats, getAllChats } = useChatStore();
+    const { chats } = useChatStore();
     const allFriends = chats?.map((arr) => arr.members);
     const allFriendsFlat = (chats.length !== 0) ? [].concat(...allFriends) : [].concat(...allFriends).concat(authUser?.id)
 
-    const [isFetching, setIsFetching] = useState(false);
     const [allUsers, setAllUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([])
     const [query, setQuery] = useState("");
 
     const allUsersExcFriends = allUsers.filter((user) => !allFriendsFlat.includes(user.id))
-
-    function addFriend(e, username) {
-        e.preventDefault()
-
-        setIsFetching(true)
-        fetch("/api/chats", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username })
-        })
-        .then(res => res.json())
-        .then(data => {
-            setIsFetching(false);
-            console.log(data)
-        })
-        .catch(err => console.log(err))
-    }
 
     useEffect(() => {
         fetch("/api/all-users", {
@@ -50,10 +35,6 @@ function PeoplePage() {
         })
         .catch(err => console.log(err))
     }, [chats])
-
-    useEffect(() => {
-        if (!isFetching) getAllChats()
-    }, [isFetching])
 
     useEffect(() => {
         setFilteredUsers(allUsersExcFriends.filter((user) =>
@@ -77,17 +58,7 @@ function PeoplePage() {
 
             <div className="flex flex-col h-[calc(100vh-12rem)] overflow-y-auto gap-6 py-4 bg-slate-950 rounded-lg">
             {filteredUsers.map((user) => (
-                <div key={user.id} className="flex justify-between items-center p-4 mx-4 bg-slate-900 rounded-lg">
-                    <div className="flex items-center gap-3">
-                        <img className="size-10 rounded-full object-cover border-2 bg-slate-800" src={user.profileImg || avatar} />
-                        <div className="text-2xl">{user.username}</div>
-                    </div>
-
-                    <div className="flex items-start gap-3 cursor-pointer" onClick={(e) => addFriend(e, user.username)}>
-                        <FaUserCheck className="size-6" />
-                        <div className="text-lg">{isFetching ? 'Adding...' : 'Add Friend' }</div>
-                    </div>
-                </div>
+                <PeopleFriend key={user.id} user={user} />
             ))}
             </div>
 

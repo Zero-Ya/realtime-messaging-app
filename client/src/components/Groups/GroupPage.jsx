@@ -7,6 +7,7 @@ import AddGroupForm from "../Groups/AddGroupForm";
 
 // Assets
 import { FaUserGroup, FaPlus } from "react-icons/fa6";
+import avatar from "../../assets/avatar.svg";
 
 // Store
 import { useAuthStore } from "../../store/authStore";
@@ -14,11 +15,16 @@ import { useGroupStore } from "../../store/groupStore";
 
 function GroupPage() {
     const { authUser } = useAuthStore();
-    const { selectedGroup, setSelectedGroup, groups, getAllGroups } = useGroupStore()
+    const { selectedGroup, setSelectedGroup, groups, getAllGroups, isGettingGroups } = useGroupStore()
 
     // const [allUsers, setAllUsers] = useState([]);
 
+    const groupsUserIn = groups.filter((group) => group.members.includes(authUser?.id))
     const [addGroup, setAddGroup] = useState(false);
+
+    function groupOnClick(group) {
+        setSelectedGroup(group)
+    }
 
     useEffect(() => {
         getAllGroups();
@@ -37,15 +43,24 @@ function GroupPage() {
                     <FaPlus onClick={() => setAddGroup(!addGroup)} className={`size-6 ${addGroup && 'rotate-45'}`} />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    {groups?.map((group) => 
-                    <div key={group.id} className="bg-slate-600 p-4" onClick={() => setSelectedGroup(group)}>
-                        <div className="text-lg">{group.name}</div>
-
+                <div className="max-h-[calc(100vh-6rem)] overflow-y-auto flex flex-col">
+                    {groupsUserIn?.map((group) => 
+                    isGettingGroups ? 
+                    <div key={group.id} className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                            <img className="size-8 rounded-full object-cover border-2" src={avatar} />
+                            <div className="text-xl">Loading...</div>
+                        </div>    
+                    </div>
+                    :
+                    <div key={group.id} className={`px-4 py-3 hover:bg-slate-800 ${selectedGroup?.id === group.id && 'bg-slate-800'}`} onClick={() => groupOnClick(group)}>
+                        <div className="flex items-center gap-3">
+                            <img className="size-8 rounded-full object-cover border-2 bg-slate-800" src={group.groupImg || avatar} />
+                            <div className="text-xl">{group.name}</div>
+                        </div>
                     </div>)}
                 </div>
                 
-
             </div>
 
             {/*  */}

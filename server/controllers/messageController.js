@@ -8,13 +8,23 @@ exports.postMessage = async (req, res) => {
         const senderId = req.user.id;
         const receiverId = parseInt(req.params.receiverId);
 
-        const { text, image } = req.body;
+        // const { text, image } = req.body;
+        // let imageUrl;
+        // if (image) {
+        //     // Upload base64 image to cloudinary
+        //     const uploadResponse = await cloudinary.uploader.upload(image);
+        //     imageUrl = uploadResponse.secure_url;
+        // }
 
-        let imageUrl;
-        if (image) {
-            // Upload base64 image to cloudinary
-            const uploadResponse = await cloudinary.uploader.upload(image);
-            imageUrl = uploadResponse.secure_url;
+        const { text } = req.body;
+        const file = req.file;
+
+        let fileUrl;
+        let fileSize;
+        if (file) {
+            const uploadResponse = await cloudinary.uploader.upload(req.file.path);
+            fileUrl = uploadResponse.secure_url
+            fileSize = file.size
         }
 
         if (senderId) {
@@ -26,11 +36,13 @@ exports.postMessage = async (req, res) => {
 
             const message = await prisma.message.create({
                 data: {
-                    chatId ,
-                    senderId ,
+                    chatId,
+                    senderId,
                     receiverId,
                     text,
-                    image: imageUrl
+                    file: fileUrl,
+                    fileSize
+                    // image: imageUrl
                 }
             })
             res.json(message)
@@ -53,13 +65,15 @@ exports.postGroupMessage = async (req, res) => {
         const { groupId } = req.params;
         const senderId = req.user.id;
 
-        const { text, image } = req.body;
+        const { text } = req.body;
+        const file = req.file;
 
-        let imageUrl;
-        if (image) {
-            // Upload base64 image to cloudinary
-            const uploadResponse = await cloudinary.uploader.upload(image);
-            imageUrl = uploadResponse.secure_url;
+        let fileUrl;
+        let fileSize;
+        if (file) {
+            const uploadResponse = await cloudinary.uploader.upload(req.file.path);
+            fileUrl = uploadResponse.secure_url
+            fileSize = file.size
         }
 
         if (!senderId) return res.json({ msg: "No user found" });
@@ -75,11 +89,16 @@ exports.postGroupMessage = async (req, res) => {
                 groupId: parseInt(groupId),
                 senderId,
                 text,
-                image: imageUrl
+                file: fileUrl,
+                fileSize
             }
         })
         res.json(message)
 
+        // Send message real time using socket.io
+        io.in(message.groupId).emit("send-channel-message", message);
+        io.emit("refreshGroupChats", { msg: "Refreshing..." });
+        
     } catch (error) {
         console.log("Send group message error", error)
     }

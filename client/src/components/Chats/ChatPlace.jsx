@@ -1,5 +1,5 @@
 // Modules
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Components
 import Message from "../Message";
@@ -33,6 +33,8 @@ function ChatPlace() {
         }
         return () => unsubscribeFromMessages()
     }, [selectedChat])
+
+    
 
     return (
         <div className="w-full flex flex-col gap-4 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg">

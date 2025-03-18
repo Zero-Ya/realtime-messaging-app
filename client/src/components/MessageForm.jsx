@@ -9,28 +9,34 @@ import { useGroupStore } from "../store/groupStore";
 import { FaRegImage, FaRegPaperPlane, FaCircleXmark } from "react-icons/fa6";
 
 function MessageForm({ selectedType }) {
-    const { isMessagesLoading ,sendMessage } = useChatStore();
+    const { isMessagesLoading ,sendMessage, uploadFile } = useChatStore();
     const { sendGroupMessage } = useGroupStore();
 
     const [message, setMessage] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = useRef(null);
 
+    const [messageData, setMessageData] = useState(new FormData());
 
-
-    function handleImageChange(e) {
-        const file = e.target.files[0];
-        if (!file.type.startsWith("image/")) return console.log("Please select an image file");
+    function handleFileChange(e) {
+        const file = e.target.files[0]
+        if (!file) return console.log("Please select a file");
+        if (!file.type.startsWith("image/")) return console.log("Please select an image");
 
         const reader = new FileReader();
         reader.onloadend = () => {
             setImagePreview(reader.result);
         }
         reader.readAsDataURL(file);
+
+        const formData = new FormData()
+        formData.append("file", file)
+        setMessageData(formData)
     }
 
     function removeImage() {
         setImagePreview(null);
+        if (messageData.get("file")) setMessageData(new FormData());
         if (fileInputRef.current) fileInputRef.current.value = "";
     }
 
@@ -38,10 +44,18 @@ function MessageForm({ selectedType }) {
         e.preventDefault();
         if (!message.trim() && !imagePreview) return
 
-        if (selectedType === "chat") sendMessage({ text: message.trim(), image: imagePreview });
-        if (selectedType === "group") sendGroupMessage({ text: message.trim(), image: imagePreview });
+        if (selectedType === "chat") {
+            setMessageData(messageData.append("text", message.trim()))
+            sendMessage(messageData);
+        }
+
+        if (selectedType === "group") {
+            setMessageData(messageData.append("text", message.trim()))
+            sendGroupMessage(messageData)
+        }
 
         setMessage("");
+        setMessageData(new FormData());
         removeImage();
     }
 
@@ -60,7 +74,7 @@ function MessageForm({ selectedType }) {
                 placeholder="Type a message..." onChange={(e) => setMessage(e.target.value)} />
 
                 <div className="flex items-center gap-8">
-                    <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageChange} />
+                    <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
                     <button type="button" onClick={() => fileInputRef.current?.click()}>
                         <FaRegImage className={`size-6 cursor-pointer hover:text-slate-400 ${imagePreview && 'text-sky-600'}`} />
                     </button>

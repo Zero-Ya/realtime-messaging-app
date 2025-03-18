@@ -2,10 +2,11 @@ const { Router } = require("express");
 const router = Router();
 const messageController = require("../controllers/messageController");
 
-router.post("/chats/:chatId/:receiverId", messageController.postMessage);
-router.post("/groups/:groupId", messageController.postGroupMessage);
+const upload = require("../lib/multer")
+
+router.post("/chats/:chatId/:receiverId", upload.single("file"), messageController.postMessage);
+router.post("/groups/:groupId", upload.single("file"), messageController.postGroupMessage);
 router.get("/chats/:userId", messageController.getChatMessages);
 router.get("/groups/:groupId", messageController.getGroupMessages);
-
 
 module.exports = router;

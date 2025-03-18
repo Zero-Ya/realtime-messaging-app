@@ -1,28 +1,34 @@
 // Modules
+import { useState, useEffect } from "react";
 import { format, formatDistance } from "date-fns";
 
 // Store
-import { useAuthStore } from "../store/authStore";
-import { useChatStore } from "../store/chatStore";
+import { useAuthStore } from "../../store/authStore";
+import { useChatStore } from "../../store/chatStore";
+import { useGroupStore } from "../../store/groupStore";
 
 // Assets
-import { FaFile } from "react-icons/fa6";
-import avatar from "../assets/avatar.svg";
+import avatar from "../../assets/avatar.svg";
 
-function Message({ message, senderId, messageEndRef }) {
+function GroupMessage({ message, messageEndRef }) {
     const { authUser } = useAuthStore();
-    const { selectedUserChat, setShowImage, setImageUrl } = useChatStore();
+    const { setShowImage, setImageUrl } = useChatStore();
 
-    const checkIfImage = (filePath) => {
-        const imageRegex = /\.(jpg|jpeg|png|gif|bmp|tiff|tif|webp|svg|ico|heic|heif)$/i;
-        return imageRegex.test(filePath)
-    }
+    const [sender, setSender] = useState(null)
+
+    useEffect(() => {
+        fetch(`/api/chats/users/${message.senderId}`, {
+            method: "GET"
+        })
+        .then(res => res.json())
+        .then(data => setSender(data))
+    }, [])
 
     return (
         <>
-        {(senderId === authUser.id) ?
+        {(authUser.id === message.senderId) ?
         <div className="self-end" ref={messageEndRef}>
-            {(message.file && checkIfImage(message.file)) && <img className="size-96 object-cover rounded-t-lg border-2 border-sky-600" src={message.file}
+            {message.file && <img className="size-96 object-cover rounded-t-lg border-2 border-sky-600" src={message.file}
             onClick={() => {
                 setShowImage(true)
                 setImageUrl(message.file)
@@ -34,9 +40,9 @@ function Message({ message, senderId, messageEndRef }) {
         <div className="flex flex-col" ref={messageEndRef}>
             <div className="flex items-center gap-2">
                 <img className={`size-8 rounded-full object-cover border-2 bg-slate-800 ${message.file && 'self-end'}`}
-                src={(selectedUserChat?.id === message?.receiverId || selectedUserChat?.id === message?.senderId) ? selectedUserChat?.profileImg || avatar : avatar} />
+                src={sender?.profileImg || avatar} />
                 <div>
-                    {(message.file && checkIfImage(message.file)) && <img className="size-96 object-cover rounded-t-lg border-2 border-slate-600" src={message.file}
+                    {message.file && <img className="size-96 object-cover rounded-t-lg border-2 border-slate-600" src={message.file}
                     onClick={() => {
                         setShowImage(true)
                         setImageUrl(message.file)
@@ -45,9 +51,9 @@ function Message({ message, senderId, messageEndRef }) {
                 </div>
             </div>
             <div className="text-slate-200 text-sm text-left my-1 ml-10">{formatDistance(new Date(), message.createdAt) + ' ago at ' + format(message.createdAt, "h:mm a")}</div>
-        </div>}       
+        </div>}
         </>
     )
 }
 
-export default Message
+export default GroupMessage

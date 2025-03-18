@@ -7,21 +7,33 @@ export const useGroupStore = create((set, get) => ({
     groups: [],
     groupMessages: [],
 
+    isCreatingGroup: false,
     isUpdatingGroupImage: false,
     isGettingGroups: false,
     isGroupMessagesLoading: false,
 
-    setSelectedGroup: (selectedGroup) => set({ selectedGroup }),
+    setSelectedGroup: (selectedGroup) => {
+        const socket = useAuthStore.getState().socket;
 
-    createGroup: async (groupName, members) => {
-        const bodyData = { groupName, membersId: members }
+        set({ selectedGroup });
+        // Emit join room event
+        socket.emit('join', selectedGroup.id);
+    },
 
+    createGroup: async (groupName, members, groupImg) => {
+        const authUser = useAuthStore.getState().authUser
+        const bodyData = { groupName, membersId: members.concat(authUser.id), groupImg }
+
+        set({ isCreatingGroup: true });
         try {
-            const res = await fetch("/api/groups/", { method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) })
-            const data = await res.json()
+            const res = await fetch("/api/groups/", { method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
+            const data = await res.json();
+            get().getAllGroups();
             console.log(data)
         } catch (error) {
             // 
+        } finally {
+            set({ isCreatingGroup: false });
         }
     },
 
@@ -41,11 +53,10 @@ export const useGroupStore = create((set, get) => ({
     sendGroupMessage: async (messageData) => {
         const { selectedGroup } = get();
         try {
-            const res = await fetch(`/api/messages/groups/${selectedGroup.id}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(messageData) })
+            const res = await fetch(`/api/messages/groups/${selectedGroup.id}`, { method: "POST", body: messageData })
             const data = await res.json();
-            set({ groupMessages: [...get().groupMessages, data] });
-            console.log(data)
-            // Get all something
+            // set({ groupMessages: [...get().groupMessages, data] });
+            get().getAllGroups();
         } catch (error) {
             // 
         }
@@ -79,4 +90,27 @@ export const useGroupStore = create((set, get) => ({
             set({ isUpdatingGroupImage: false });
         }
     },
+
+    subscribeToGroupMessages: () => {
+        const { selectedGroup } = get();
+        if (!selectedGroup) return
+
+        const socket = useAuthStore.getState().socket;
+
+        socket.on("send-channel-message", (message) => {
+            if (message.groupId !== selectedGroup.id) return
+            set({ groupMessages: [...get().groupMessages, message] })
+        });
+
+        // Refresh chat to top
+        socket.on("refreshGroupChats", (msg) => {
+            get().getAllGroups();
+        });
+    },
+
+    unsubscribeFromGroupMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        socket?.off("send-channel-message");
+    }
+
 }));

@@ -28,6 +28,9 @@ io.on("connection", (socket) => {
 
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
+    // Connect to a room when client emit an event
+    socket.on('join', (room) => socket.join(room))
+
     socket.on("disconnect", () => {
         console.log(`User disconnected: ${socket.id} `)
         delete userSocketMap[userId];
