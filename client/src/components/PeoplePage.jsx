@@ -45,14 +45,14 @@ function PeoplePage() {
     return (
         authUser &&
         <div className="w-full flex flex-col gap-6 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg">
-            <div className="flex items-center gap-3">
-                <FaUsers className="size-10" />
-                <div className="text-2xl font-semibold">Find Friends</div>
+            <div className="flex items-center gap-2 py-2 md:py-0">
+                <FaUsers className="size-6 lg:size-10" />
+                <div className="text-xl lg:text-2xl font-semibold">Find Friends</div>
             </div>
 
             <label className="flex items-center gap-3 cursor-pointer">
-                <FaMagnifyingGlass className="size-6" />
-                <input className="text-lg p-2 bg-slate-800 rounded-lg border-4 border-slate-600" type="search" placeholder="Search for user..."
+                <FaMagnifyingGlass className="size-5 lg:size-6" />
+                <input className="text-base lg:text-lg p-1 md:p-2 bg-slate-800 rounded-lg border-4 border-slate-600" type="search" placeholder="Search for user..."
                 value={query} onChange={(e) => setQuery(e.target.value)}/>
             </label>
 

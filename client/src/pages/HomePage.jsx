@@ -1,5 +1,5 @@
 // Modules
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 
 // Components
@@ -14,10 +14,12 @@ import { useAuthStore } from "../store/authStore";
 import { useChatStore } from "../store/chatStore";
 
 function HomePage() {
-    const { authUser } = useAuthStore();
+    const { authUser, getAllUsers } = useAuthStore();
     const { getAllChats } = useChatStore();
 
     const [navSelection] = useOutletContext();
+
+    const [showChat, setShowChat] = useState(false);
 
     const navigate = useNavigate();
 
@@ -28,6 +30,7 @@ function HomePage() {
     useEffect(() => {
         if (!authUser) return
         getAllChats()
+        getAllUsers()
     }, [authUser])
 
     if (navSelection === "group") return (
@@ -45,8 +48,8 @@ function HomePage() {
     return (
         authUser &&
         <div className="w-full flex gap-2">
-            <ChatList />
-            <ChatPlace />
+            <ChatList showChatState={[showChat, setShowChat]} />
+            <ChatPlace showChatState={[showChat, setShowChat]} />
         </div>
     )
 }

@@ -4,15 +4,20 @@ import { useEffect, useRef } from "react";
 // Assets
 import avatar from "../../assets/avatar.svg";
 import cool_background from "../../assets/cool-background.png";
+import { FaArrowLeft, FaEllipsis } from "react-icons/fa6";
 
 // Components
 import GroupMessage from "./GroupMessage";
 import MessageForm from "../MessageForm";
+import GroupInfo from "./GroupInfo";
 
 // Store
 import { useGroupStore } from "../../store/groupStore";
 
-function GroupChatPlace() {
+function GroupChatPlace({ showGroupChatState, showGroupInfoState }) {
+    const [showGroupChat, setShowGroupChat] = showGroupChatState;
+    const [showGroupInfo, setShowGroupInfo] = showGroupInfoState;
+
     const { selectedGroup, getGroupMessages, isGroupMessagesLoading, groupMessages, subscribeToGroupMessages, unsubscribeFromGroupMessages } = useGroupStore();
 
     const messageEndRef = useRef(null);
@@ -25,19 +30,25 @@ function GroupChatPlace() {
 
     useEffect(() => {
         if (!selectedGroup) return
-        // getAllGroups();
         getGroupMessages();
         subscribeToGroupMessages();
         
         return () => unsubscribeFromGroupMessages();
     }, [selectedGroup])
 
+    if (showGroupInfo) return <GroupInfo setShowGroupInfo={setShowGroupInfo} selectedGroup={selectedGroup} setShowGroupChat={setShowGroupChat} />
+
     return (
         <>
             {(selectedGroup?.id) &&
-            <div className="flex items-center gap-3">
-                <img className="size-8 rounded-full object-cover border-2 bg-slate-800" src={selectedGroup?.groupImg || avatar} />
-                <div className="text-2xl">{selectedGroup?.name}</div>
+            <div className="flex justify-between items-center gap-2">
+                <div className="flex items-center gap-3">
+                    <FaArrowLeft className="block md:hidden size-5" onClick={() => setShowGroupChat(false)} />
+                    <img className="size-8 rounded-full object-cover border-2 bg-slate-800" src={selectedGroup?.groupImg || avatar} />
+                    <div className="text-2xl">{selectedGroup?.name}</div>
+                </div>
+
+                <FaEllipsis className="size-8" onClick={() => setShowGroupInfo(true)} />
             </div>}
 
             <div className="h-full flex flex-col justify-between gap-4">

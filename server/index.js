@@ -19,8 +19,9 @@ const groupRoutes = require("./routes/group");
 app.use(sessionConfig);
 app.use(passport.session());
 
-app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+app.use(express.json({ limit: "1mb" }));
+// app.use(bodyParser.json());
 
 require("./config/passportConfig");
 

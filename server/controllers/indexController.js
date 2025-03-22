@@ -67,14 +67,6 @@ exports.getAuthUser = async (req, res) => {
     }
 }
 
-// exports.getUser = async (req, res) => {
-//     const { userId } = req.params
-//     const theUser = await prisma.user.findUnique({
-//         where: { id: parseInt(userId) }
-//     })
-//     res.json(theUser);
-// }
-
 exports.getAllUsers = async (req, res) => {
     const allUsers = await prisma.user.findMany();
     res.json(allUsers);
@@ -87,6 +79,7 @@ exports.updateProfile = async (req ,res) => {
     if (!profileImg) return res.json({ msg: "No profile image is given" })
     
     const uploadResponse = await cloudinary.uploader.upload(profileImg);
+    console.log(uploadResponse)
 
     if (authUserId) {
         const updatedUser = await prisma.user.update({

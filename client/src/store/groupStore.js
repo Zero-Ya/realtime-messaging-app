@@ -11,6 +11,9 @@ export const useGroupStore = create((set, get) => ({
     isUpdatingGroupImage: false,
     isGettingGroups: false,
     isGroupMessagesLoading: false,
+    isRemovingMember: false,
+    isUpdatingMembers: false,
+    isDeletingGroup: false,
 
     setSelectedGroup: (selectedGroup) => {
         const socket = useAuthStore.getState().socket;
@@ -34,6 +37,41 @@ export const useGroupStore = create((set, get) => ({
             // 
         } finally {
             set({ isCreatingGroup: false });
+        }
+    },
+
+    removeMember: async (groupId, newMembers, type) => {
+        const bodyData = { newMembers }
+
+        set({ isRemovingMember: true });
+        try {
+            const res = await fetch(`/api/groups/remove-member/${groupId}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
+            const data = await res.json();
+            if (type === "leave") set({ selectedGroup: null })
+            else set({ selectedGroup: data });
+            get().getAllGroups();
+            console.log(data)
+        } catch (error) {
+            // 
+        } finally {
+            set({ isRemovingMember: false });
+        }
+    },
+
+    updateMembers: async (groupId, newMembers) => {
+        const bodyData = { newMembers };
+
+        set({ isUpdatingMembers: true });
+        try {
+            const res = await fetch(`/api/groups/update-members/${groupId}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) })
+            const data = await res.json();
+            set({ selectedGroup: data });
+
+            console.log(data)
+        } catch (error) {
+            // 
+        } finally {
+            set({ isUpdatingMembers: false });
         }
     },
 
@@ -84,10 +122,40 @@ export const useGroupStore = create((set, get) => ({
             const res = await fetch(`/api/groups/update-image/${selectedGroup?.id}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             const groupData = await res.json();
             set({ selectedGroup: groupData })
+            get().getAllGroups();
         } catch (error) {
             // 
         } finally {
             set({ isUpdatingGroupImage: false });
+        }
+    },
+
+    updateGroupName: async (data) => {
+        const { selectedGroup } = get();
+        try {
+            const res = await fetch(`/api/groups/update-name/${selectedGroup?.id}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            const groupData = await res.json();
+            console.log(groupData)
+            set({ selectedGroup: groupData });
+            get().getAllGroups();
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    deleteGroup: async (groupId) => {
+        set({ isDeletingGroup: true });
+        try {
+            const res = await fetch(`/api/groups/delete/${groupId}` , { method: "POST" })
+            const data = await res.json();
+            set({ selectedGroup: null });
+            get().getAllGroups();
+
+            console.log(data)
+        } catch (error) {
+            // 
+        } finally {
+            set({ isDeletingGroup: false });
         }
     },
 
@@ -104,6 +172,11 @@ export const useGroupStore = create((set, get) => ({
 
         // Refresh chat to top
         socket.on("refreshGroupChats", (msg) => {
+            get().getAllGroups();
+        });
+
+        socket.on("restartGroupChats", (msg) => {
+            set({ selectedGroup: null });
             get().getAllGroups();
         });
     },

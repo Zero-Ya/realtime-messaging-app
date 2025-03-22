@@ -120,17 +120,15 @@ exports.getChatMessages = async (req ,res) => {
     const authUserId = req.user.id;
     const otherUserId = parseInt(req.params.userId);
 
-    if (req.user) {
-        const chat = await prisma.chat.findFirst({
-            where: { members: { hasEvery: [authUserId, otherUserId] } }
-        })
-        
-        const messages = await prisma.message.findMany({
-            where: { chatId: chat.id },
-            orderBy: { createdAt: "asc" }
-        })
+    if (!req.user) res.json({ msg: "Get chat messages went wrong" });
 
-        res.json(messages)
-    } else res.json({ msg: "Get chat messages went wrong" })
-
+    const chat = await prisma.chat.findFirst({
+        where: { members: { hasEvery: [authUserId, otherUserId] } }
+    })
+    
+    const messages = await prisma.message.findMany({
+        where: { chatId: chat.id },
+        orderBy: { createdAt: "asc" }
+    })
+    res.json(messages)
 }

@@ -10,10 +10,13 @@ import { useAuthStore } from "../../store/authStore";
 import { useChatStore } from "../../store/chatStore";
 
 // Assets
+import { FaArrowLeft } from "react-icons/fa6";
 import avatar from "../../assets/avatar.svg";
 import cool_background from "../../assets/cool-background.png";
 
-function ChatPlace() {
+function ChatPlace({ showChatState }) {
+    const [showChat, setShowChat] = showChatState;
+
     const { authUser } = useAuthStore();
     const { selectedChat, selectedUserChat, messages, isMessagesLoading, getMessages, getChat, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
 
@@ -37,9 +40,10 @@ function ChatPlace() {
     
 
     return (
-        <div className="w-full flex flex-col gap-4 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg">
+        <div className={`${!showChat ? 'hidden' : 'flex'} w-full md:flex flex-col gap-4 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg`}>
             {(selectedUserChat?.id && !isMessagesLoading) &&
             <div className="flex items-center gap-3">
+                <FaArrowLeft className="block md:hidden size-5" onClick={() => setShowChat(false)} />
                 <img className="size-8 rounded-full object-cover border-2 bg-slate-800" src={selectedUserChat?.profileImg || avatar} />
                 <div className="text-2xl">{selectedUserChat?.username}</div>
             </div>}

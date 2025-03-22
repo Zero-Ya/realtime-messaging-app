@@ -1,4 +1,5 @@
 const prisma = require("../db/prismaClient");
+const { io, getReceiverSocketId } = require("../lib/socket");
 
 exports.getAllChats = async (req, res) => {
     if (req.user) {
@@ -73,6 +74,8 @@ exports.removeChat = async (req, res) => {
             members: { hasEvery: [authUserId, userId] }
         }
     })
+
+    if (!chat) return res.json("No chat to be deleted");
     
     await prisma.message.deleteMany({
         where: { chatId: chat.id }
@@ -81,4 +84,9 @@ exports.removeChat = async (req, res) => {
         where: { id: chat.id }
     })
     res.json(delChat)
+
+    const receiverSocketId = getReceiverSocketId(receiverId)
+    if (receiverSocketId) {
+        io.to(receiverSocketId).emit("refreshChats", { msg: "Refreshing..." });
+    }
 }

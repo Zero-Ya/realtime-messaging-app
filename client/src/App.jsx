@@ -41,9 +41,9 @@ function App() {
             
             <Outlet context={[navSelection, setNavSelection]} />
 
-            {showImage && <div className="z-99 fixed w-screen h-screen top-0 left-0 flex justify-center backdrop-blur-lg">
-                <img src={imageUrl} />
-                <FaCircleXmark className="size-5" onClick={() => {
+            {showImage && <div className="z-99 fixed w-screen h-screen top-0 left-0 flex items-center justify-center backdrop-blur-lg">
+                <img className="h-4/6 sm:h-5/6 md:h-full" src={imageUrl} />
+                <FaCircleXmark className="absolute top-0 right-0 size-8" onClick={() => {
                     setShowImage(false)
                     setImageUrl(null)
                 }} />

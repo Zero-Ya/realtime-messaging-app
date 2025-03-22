@@ -3,15 +3,17 @@ import { io } from "socket.io-client";
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
+    allUsers: [],
 
     isCheckingAuth: false,
+    isGettingAllUsers: false,
     isUpdatingProfile: false,
     isLoggingOut: false,
 
     onlineUsers: [],
     socket: null,
 
-    checkAuth: async() => {
+    checkAuth: async () => {
         set({ isCheckingAuth: true })
         try {
             const res = await fetch("/api/authUser");
@@ -23,6 +25,19 @@ export const useAuthStore = create((set, get) => ({
             set({ authUser: null });
         } finally {
             set({ isCheckingAuth: false });
+        }
+    },
+
+    getAllUsers: async () => {
+        set({ isGettingAllUsers: true });
+        try {
+            const res = await fetch("/api/all-users");
+            const data = await res.json();
+            set({ allUsers: data });
+        } catch (error) {
+            // 
+        } finally {
+            set({ isGettingAllUsers: false });
         }
     },
 
