@@ -31,6 +31,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch("/api/groups/", { method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
             const data = await res.json();
+            if (data.message) return;
             get().getAllGroups();
             console.log(data)
         } catch (error) {
@@ -47,6 +48,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/groups/remove-member/${groupId}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
             const data = await res.json();
+            if (data.message) return;
             if (type === "leave") set({ selectedGroup: null })
             else set({ selectedGroup: data });
             get().getAllGroups();
@@ -65,6 +67,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/groups/update-members/${groupId}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) })
             const data = await res.json();
+            if (data.message) return;
             set({ selectedGroup: data });
 
             console.log(data)
@@ -80,6 +83,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch("/api/groups/all");
             const data = await res.json()
+            if (data.message) return;
             set({ groups: data })
         } catch (error) {
             // 
@@ -93,6 +97,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/messages/groups/${selectedGroup.id}`, { method: "POST", body: messageData })
             const data = await res.json();
+            if (data.message) return;
             // set({ groupMessages: [...get().groupMessages, data] });
             get().getAllGroups();
         } catch (error) {
@@ -107,6 +112,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/messages/groups/${selectedGroup.id}`);
             const data = await res.json();
+            if (data.message) return;
             set({ groupMessages: data });
         } catch (error) {
             // 
@@ -121,6 +127,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/groups/update-image/${selectedGroup?.id}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             const groupData = await res.json();
+            if (groupData.message) return;
             set({ selectedGroup: groupData })
             get().getAllGroups();
         } catch (error) {
@@ -135,6 +142,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/groups/update-name/${selectedGroup?.id}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             const groupData = await res.json();
+            if (groupData.message) return;
             console.log(groupData)
             set({ selectedGroup: groupData });
             get().getAllGroups();
@@ -148,6 +156,7 @@ export const useGroupStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/groups/delete/${groupId}` , { method: "POST" })
             const data = await res.json();
+            if (data.message) return;
             set({ selectedGroup: null });
             get().getAllGroups();
 
@@ -171,11 +180,11 @@ export const useGroupStore = create((set, get) => ({
         });
 
         // Refresh chat to top
-        socket.on("refreshGroupChats", (msg) => {
+        socket.on("refreshGroupChats", (message) => {
             get().getAllGroups();
         });
 
-        socket.on("restartGroupChats", (msg) => {
+        socket.on("restartGroupChats", (message) => {
             set({ selectedGroup: null });
             get().getAllGroups();
         });

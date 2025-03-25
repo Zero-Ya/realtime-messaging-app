@@ -66,7 +66,7 @@ function GroupPage() {
                     onChange={(e) => setQuery(e.target.value)} value={query}/>
                 </div>
 
-                <div className="max-h-[calc(100vh-6rem)] overflow-y-auto flex flex-col">
+                <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto flex flex-col">
                     {filteredGroups?.map((group) => 
                     isGettingGroups ? 
                     <div key={group.id} className="px-4 py-3">

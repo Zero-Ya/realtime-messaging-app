@@ -1,11 +1,13 @@
 const { Router } = require("express");
-const router = Router();
 const chatController = require("../controllers/chatController");
+const protectRoute = require("../middleware/authMiddleware.js");
 
-router.post("/", chatController.createChat);
-router.post("/remove", chatController.removeChat);
-router.get("/users/:userId", chatController.getUserChatList);
-router.get("/all", chatController.getAllChats);
-router.get("/chat/:authUserId/:selectedUserId", chatController.getChat);
+const router = Router();
+
+router.post("/", protectRoute, chatController.createChat);
+router.post("/remove", protectRoute, chatController.removeChat);
+router.get("/users/:userId", protectRoute, chatController.getUserChatList);
+router.get("/all", protectRoute, chatController.getAllChats);
+router.get("/chat/:authUserId/:selectedUserId", protectRoute, chatController.getChat);
 
 module.exports = router;

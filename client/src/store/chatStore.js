@@ -23,6 +23,7 @@ export const useChatStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/chats/users/${selectedUserId}`);
             const data = await res.json();
+            if (data.message) return;
             set({ selectedUserChat: data });
         } catch (error) {
             // 
@@ -33,7 +34,7 @@ export const useChatStore = create((set, get) => ({
         try {
             const res = await fetch("/api/chats/all");
             const data = await res.json();
-            if (data.msg) return
+            if (data.message) return;
             set({ chats: data });
         } catch (error) {
             console.log(error)
@@ -45,6 +46,7 @@ export const useChatStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/messages/chats/${selectedChat}`);
             const data = await res.json();
+            if (data.message) return;
             set({ messages: data });
             get().getAllChats();
         } catch (error) {
@@ -59,8 +61,8 @@ export const useChatStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/chats/chat/${authUser.id}/${selectedChat}`);
             const data = await res.json();
+            if (data.message) return;
             set({ chat: data });
-
         } catch (error) {
             // 
         }
@@ -71,7 +73,8 @@ export const useChatStore = create((set, get) => ({
         try {
             const res = await fetch(`/api/messages/chats/${chat.id}/${selectedChat}`, { method: "POST", body: messageData });
             const data = await res.json();
-            set({ messages: [...get().messages, data] });
+            if (data.message) return;
+            // set({ messages: [...get().messages, data] });
             get().getAllChats();
         } catch (error) {
             // 
@@ -93,13 +96,12 @@ export const useChatStore = create((set, get) => ({
         const socket = useAuthStore.getState().socket;
 
         socket.on("newMessage", (message) => {
-            if (message.senderId !== selectedChat) return
-            set({ messages: [...get().messages, message] })
+            set({ messages: [...get().messages, message] });
         });
 
         // Refresh chat to top
-        socket.on("refreshChats", (msg) => {
-            get().getAllChats()
+        socket.on("refreshChats", (message) => {
+            get().getAllChats();
         });
     },
 

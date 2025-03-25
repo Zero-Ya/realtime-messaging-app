@@ -15,8 +15,6 @@ function getReceiverSocketId(userId) {
     return userSocketMap[userId];
 }
 
-
-
 // Store online users
 const userSocketMap = {};
 

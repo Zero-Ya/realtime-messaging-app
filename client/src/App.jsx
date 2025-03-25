@@ -14,7 +14,7 @@ import { FaCircleXmark } from "react-icons/fa6";
 
 function App() {
     const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
-    const { messages, chats, showImage, imageUrl, setShowImage, setImageUrl } = useChatStore();
+    const { showImage, imageUrl, setShowImage, setImageUrl } = useChatStore();
 
     const [navSelection, setNavSelection] = useState("chat");
 
@@ -28,8 +28,6 @@ function App() {
     useEffect(() => {
         if (authUser) navigate("/");
     }, [authUser])
-
-
     
     if (isCheckingAuth && !authUser) return (
         <div className="w-full h-screen flex justify-center items-center text-3xl">Loading...</div>

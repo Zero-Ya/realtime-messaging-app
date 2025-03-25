@@ -1,6 +1,6 @@
 const prisma = require("../db/prismaClient");
 const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
+const generateToken = require("../lib/utils.js");
 const passport = require("passport");
 const cloudinary = require("../lib/cloudinary");
 
@@ -19,11 +19,12 @@ const validateUser = [
 
 exports.logUserIn = async (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
-        if (err) return next(err)
-        if (!user) return res.status(401).json({ errMsg: "Incorrect username or password" })
+        if (err) return next(err);
+        if (!user) return res.status(401).json({ errMsg: "Incorrect username or password" });
         req.logIn(user, (err) => {
-            if (err) return next(err)
-            res.json(user)
+            if (err) return next(err);
+            generateToken(user.id, res);
+            res.status(200).json(user);
         })
     })(req, res, next)
 }
@@ -46,16 +47,29 @@ exports.register = [
                         password: hashedPassword
                     }
                 })
-                res.json(user)
+                if (user) {
+                    // generateToken(user.id, res);
+                    res.status(201).json(user);
+                } else {
+                    res.status(401).json({ message: "Invalid user data" });
+                }
             } catch(err) {
-                return next(err)
+                console.log("Error in register controller", err.message);
+                return next(err);
             }
         })
     }
 ]
 
 exports.logOut = async (req, res) => {
-    req.logout(() => res.end())
+    try {
+        res.cookie("token", "", { maxAge: 0 });
+        req.logout(() => res.end());
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (err) {
+        console.log("Error in logout controller", err.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 
 exports.getAuthUser = async (req, res) => {
@@ -63,31 +77,37 @@ exports.getAuthUser = async (req, res) => {
         res.status(200).json(req.user)
     } catch (error) {
         console.log("Error in getAuthUser controller", error.message);
-        res.status(500).json({ message: "Internal Server Error" })
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
 exports.getAllUsers = async (req, res) => {
-    const allUsers = await prisma.user.findMany();
-    res.json(allUsers);
+    try {
+        const allUsers = await prisma.user.findMany();
+        res.status(200).json(allUsers)
+    } catch (error) {
+        console.log("Error in getAllUsers controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 
 exports.updateProfile = async (req ,res) => {
-    const { profileImg } = req.body;
-    const authUserId = req.user.id;
-
-    if (!profileImg) return res.json({ msg: "No profile image is given" })
+    try {
+        const { profileImg } = req.body;
+        const authUserId = req.user.id;
     
-    const uploadResponse = await cloudinary.uploader.upload(profileImg);
-    console.log(uploadResponse)
-
-    if (authUserId) {
+        if (!profileImg) return res.status(400).json({ message: "Profile image is required" });
+        
+        const uploadResponse = await cloudinary.uploader.upload(profileImg);
         const updatedUser = await prisma.user.update({
             data: {
                 profileImg: uploadResponse.secure_url
             },
             where: { id: authUserId }
         })
-        res.json(updatedUser)
-    } else res.json({ msg: "No user found" })
+        res.status(200).json(updatedUser)
+    } catch (error) {
+        console.log("Error in updating profile:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }

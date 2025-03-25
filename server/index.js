@@ -5,7 +5,7 @@ const { app, server } = require("./lib/socket.js");
 const passport = require("passport");
 const sessionConfig = require("./config/sessionConfig");
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
@@ -21,7 +21,7 @@ app.use(passport.session());
 
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(express.json({ limit: "1mb" }));
-// app.use(bodyParser.json());
+app.use(cookieParser());
 
 require("./config/passportConfig");
 

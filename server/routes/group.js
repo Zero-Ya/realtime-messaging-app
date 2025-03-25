@@ -1,13 +1,15 @@
 const { Router } = require("express");
-const router = Router();
 const groupController = require("../controllers/groupController");
+const protectRoute = require("../middleware/authMiddleware.js");
 
-router.get("/all", groupController.getAllGroups);
-router.post("/", groupController.createGroup);
-router.put("/update-image/:groupId", groupController.updateGroupImage);
-router.put("/update-name/:groupId", groupController.updateGroupName);
-router.put("/remove-member/:groupId", groupController.removeMember);
-router.put("/update-members/:groupId", groupController.updateGroupMembers);
-router.post("/delete/:groupId", groupController.deleteGroup);
+const router = Router();
+
+router.get("/all", protectRoute, groupController.getAllGroups);
+router.post("/", protectRoute, groupController.createGroup);
+router.put("/update-image/:groupId", protectRoute, groupController.updateGroupImage);
+router.put("/update-name/:groupId", protectRoute, groupController.updateGroupName);
+router.put("/remove-member/:groupId", protectRoute, groupController.removeMember);
+router.put("/update-members/:groupId", protectRoute, groupController.updateGroupMembers);
+router.post("/delete/:groupId", protectRoute, groupController.deleteGroup);
 
 module.exports = router;

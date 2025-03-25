@@ -8,14 +8,6 @@ exports.postMessage = async (req, res) => {
         const senderId = req.user.id;
         const receiverId = parseInt(req.params.receiverId);
 
-        // const { text, image } = req.body;
-        // let imageUrl;
-        // if (image) {
-        //     // Upload base64 image to cloudinary
-        //     const uploadResponse = await cloudinary.uploader.upload(image);
-        //     imageUrl = uploadResponse.secure_url;
-        // }
-
         const { text } = req.body;
         const file = req.file;
 
@@ -26,37 +18,37 @@ exports.postMessage = async (req, res) => {
             fileUrl = uploadResponse.secure_url
             fileSize = file.size
         }
+        // Update user chat to the top of the list
+        await prisma.chat.update({
+            data: { updatedAt: new Date() },
+            where: { id: chatId }
+        })
 
-        if (senderId) {
-            // Update user chat to the top of the list
-            await prisma.chat.update({
-                data: { updatedAt: new Date() },
-                where: { id: chatId }
-            })
-
-            const message = await prisma.message.create({
-                data: {
-                    chatId,
-                    senderId,
-                    receiverId,
-                    text,
-                    file: fileUrl,
-                    fileSize
-                    // image: imageUrl
-                }
-            })
-            res.json(message)
-
-            // Send message real time using socket.io
-            const receiverSocketId = getReceiverSocketId(receiverId)
-            if (receiverSocketId) {
-                io.to(receiverSocketId).emit("newMessage", message);
-                io.to(receiverSocketId).emit("refreshChats", { msg: "Refreshing..." });
+        const message = await prisma.message.create({
+            data: {
+                chatId,
+                senderId,
+                receiverId,
+                text,
+                file: fileUrl,
+                fileSize
             }
-        } else res.json({ msg: "No user found" });
+        })
+        res.status(200).json(message);
+
+        // Send message real time using socket.io
+        // const receiverSocketId = getReceiverSocketId(receiverId)
+        // if (receiverSocketId) {
+        //     io.to(receiverSocketId).emit("newMessage", message);
+        //     io.to(receiverSocketId).emit("refreshChats", { msg: "Refreshing..." });
+        // }
+        
+        io.emit("newMessage", message);
+        io.emit("refreshChats", { message: "Refreshing..." });
 
     } catch (error) {
-        console.log("Send message error", error)
+        console.log("Error in postMessage controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
@@ -93,42 +85,49 @@ exports.postGroupMessage = async (req, res) => {
                 fileSize
             }
         })
-        res.json(message)
+        res.status(200).json(message);
 
         // Send message real time using socket.io
         io.in(message.groupId).emit("send-channel-message", message);
-        io.emit("refreshGroupChats", { msg: "Refreshing..." });
-        
+        io.emit("refreshGroupChats", { message: "Refreshing..." });
+
     } catch (error) {
-        console.log("Send group message error", error)
+        console.log("Error in postGroupMessage controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
 exports.getGroupMessages = async (req, res) => {
-    const authUserId = req.user.id;
-    const { groupId } = req.params;
-    if (!authUserId) return res.json({ msg: "No user found" });
-
-    const messages = await prisma.groupMessage.findMany({
-        where: { groupId: parseInt(groupId) },
-        orderBy: { createdAt: "asc" }
-    })
-    res.json(messages)
+    try {
+        const { groupId } = req.params;
+    
+        const messages = await prisma.groupMessage.findMany({
+            where: { groupId: parseInt(groupId) },
+            orderBy: { createdAt: "asc" }
+        })
+        res.status(200).json(messages);
+    } catch (error) {
+        console.log("Error in getGroupMessages controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 
 exports.getChatMessages = async (req ,res) => {
-    const authUserId = req.user.id;
-    const otherUserId = parseInt(req.params.userId);
-
-    if (!req.user) res.json({ msg: "Get chat messages went wrong" });
-
-    const chat = await prisma.chat.findFirst({
-        where: { members: { hasEvery: [authUserId, otherUserId] } }
-    })
+    try {
+        const authUserId = req.user.id;
+        const otherUserId = parseInt(req.params.userId);
     
-    const messages = await prisma.message.findMany({
-        where: { chatId: chat.id },
-        orderBy: { createdAt: "asc" }
-    })
-    res.json(messages)
+        const chat = await prisma.chat.findFirst({
+            where: { members: { hasEvery: [authUserId, otherUserId] } }
+        })
+        
+        const messages = await prisma.message.findMany({
+            where: { chatId: chat.id },
+            orderBy: { createdAt: "asc" }
+        })
+        res.status(200).json(messages);
+    } catch (error) {
+        console.log("Error in getChatMessages controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }

@@ -18,6 +18,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             const res = await fetch("/api/authUser");
             const data = await res.json();
+            if (data.message) return;
             set({ authUser: data });
             get().connectSocket();
         } catch (error) {
@@ -33,6 +34,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             const res = await fetch("/api/all-users");
             const data = await res.json();
+            if (data.message) return;
             set({ allUsers: data });
         } catch (error) {
             // 
@@ -43,6 +45,7 @@ export const useAuthStore = create((set, get) => ({
 
     login: async (data) => {
         try {
+            if (data.message) return;
             set({ authUser: data });
             get().connectSocket();
         } catch (error) {
@@ -71,6 +74,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             const res = await fetch("/api/update-profile", { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             const authUserData = await res.json();
+            if (data.message) return;
             set({ authUser: authUserData });
         } catch (error) {
             // Toast

@@ -51,7 +51,7 @@ function Profile() {
 
     return (
         authUser &&
-        <div className="w-full h-full lg:h-[calc(100vh-1rem)] flex flex-col gap-4 items-center my-2 py-2 px-4 bg-slate-900 text-white rounded-lg">
+        <div className="w-full h-full lg:h-[calc(100dvh-1rem)] flex flex-col gap-4 items-center my-2 py-2 px-4 bg-slate-900 text-white rounded-lg">
 
             <div className="text-lg sm:text-xl md:text-2xl xl:text-3xl font-semibold">Profile</div>
             <div className="text-xs sm:text-sm md:text-base text-slate-50">Profile information</div>

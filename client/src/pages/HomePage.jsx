@@ -15,7 +15,7 @@ import { useChatStore } from "../store/chatStore";
 
 function HomePage() {
     const { authUser, getAllUsers } = useAuthStore();
-    const { getAllChats } = useChatStore();
+    const { chats, getAllChats } = useChatStore();
 
     const [navSelection] = useOutletContext();
 
@@ -29,8 +29,8 @@ function HomePage() {
 
     useEffect(() => {
         if (!authUser) return
-        getAllChats()
-        getAllUsers()
+        getAllChats();
+        getAllUsers();
     }, [authUser])
 
     if (navSelection === "group") return (
@@ -46,7 +46,7 @@ function HomePage() {
     )
 
     return (
-        authUser &&
+        (authUser && chats.length !== 0) &&
         <div className="w-full flex gap-2">
             <ChatList showChatState={[showChat, setShowChat]} />
             <ChatPlace showChatState={[showChat, setShowChat]} />

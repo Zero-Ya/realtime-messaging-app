@@ -56,7 +56,7 @@ function PeoplePage() {
                 value={query} onChange={(e) => setQuery(e.target.value)}/>
             </label>
 
-            <div className="flex flex-col h-[calc(100vh-12rem)] overflow-y-auto gap-6 py-4 bg-slate-950 rounded-lg">
+            <div className="flex flex-col h-[calc(100dvh-12rem)] overflow-y-auto gap-6 py-4 bg-slate-950 rounded-lg">
             {filteredUsers.map((user) => (
                 <PeopleFriend key={user.id} user={user} />
             ))}

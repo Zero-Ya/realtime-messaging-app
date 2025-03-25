@@ -57,6 +57,8 @@ function AddGroupForm({ setAddGroup, setShowGroupChat }) {
         // SET STATE TO ERRORS
 
         createGroup(groupName, allMembersId, selectedImg);
+        setShowGroupChat(false);
+        setAddGroup(false);
     }
 
     useEffect(() => {
