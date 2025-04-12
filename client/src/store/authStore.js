@@ -87,7 +87,8 @@ export const useAuthStore = create((set, get) => ({
         const { authUser } = get();
         if (!authUser || get().socket?.connected) return;
 
-        const socket = io("http://localhost:3000", {
+        // http://localhost:3000
+        const socket = io("https://realtime-messaging-app-9hpl.onrender.com", {
             query: {
                 userId: authUser.id
             }
