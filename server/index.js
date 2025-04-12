@@ -7,7 +7,7 @@ const sessionConfig = require("./config/sessionConfig");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-// require("dotenv").config();
+require("dotenv").config();
 
 // Routes
 const indexRoutes = require("./routes/index");
