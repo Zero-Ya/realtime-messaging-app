@@ -17,8 +17,8 @@ function ProfileFriend({ user }) {
     function handleRemoveChat(userId) {
         setIsRemovingChat(true);
         
-        fetch(`/api/chats/remove`, {
-            method: "POST",
+        fetch(`/api/chats`, {
+            method: "DELETE",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({userId})
         })

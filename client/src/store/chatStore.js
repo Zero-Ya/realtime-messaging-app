@@ -32,7 +32,7 @@ export const useChatStore = create((set, get) => ({
 
     getAllChats: async () => {
         try {
-            const res = await fetch("/api/chats/all");
+            const res = await fetch("/api/chats");
             const data = await res.json();
             if (data.message) return;
             set({ chats: data });

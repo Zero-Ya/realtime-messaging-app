@@ -81,7 +81,7 @@ export const useGroupStore = create((set, get) => ({
     getAllGroups: async () => {
         set({ isGettingGroups: true });
         try {
-            const res = await fetch("/api/groups/all");
+            const res = await fetch("/api/groups");
             const data = await res.json()
             if (data.message) return;
             set({ groups: data })
@@ -154,7 +154,7 @@ export const useGroupStore = create((set, get) => ({
     deleteGroup: async (groupId) => {
         set({ isDeletingGroup: true });
         try {
-            const res = await fetch(`/api/groups/delete/${groupId}` , { method: "POST" })
+            const res = await fetch(`/api/groups/${groupId}` , { method: "DELETE" })
             const data = await res.json();
             if (data.message) return;
             set({ selectedGroup: null });
