@@ -9,7 +9,7 @@ const io = new Server(server, {
     cors: {
         // http://localhost:5173
         // https://realtime-messaging-app-jet.vercel.app
-        origin: ["http://localhost:5173"]
+        origin: ["https://realtime-messaging-app-jet.vercel.app"]
     }
 })
 
