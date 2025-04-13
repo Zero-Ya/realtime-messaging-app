@@ -17,31 +17,31 @@ function LoginPage() {
         e.preventDefault()
         const user = { username, password };
 
-        setIsLoggingIn(true);
-        setError(false);
+        // setIsLoggingIn(true);
+        // setError(false);
 
-        fetch("/api/authUser", {
-            method: "GET"
-        })
-        .then(res => res.json())
-        .then(data => console.log(data))
-        .catch(err => console.log(err))
-
-        // fetch("/api/login", {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify(user)
+        // fetch("/api/authUser", {
+        //     method: "GET"
         // })
         // .then(res => res.json())
-        // .then(data => {
-        //     if (data.errMsg) {
-        //         setError(true);
-        //         return setIsLoggingIn(false);
-        //     }
-        //     setIsLoggingIn(false);
-        //     login(data);
-        // })
-        // .catch(err => console.log(err));
+        // .then(data => console.log(data))
+        // .catch(err => console.log(err))
+
+        fetch("https://realtime-messaging-app-9hpl.onrender.com/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.errMsg) {
+                setError(true);
+                return setIsLoggingIn(false);
+            }
+            setIsLoggingIn(false);
+            login(data);
+        })
+        .catch(err => console.log(err));
     }
 
     return (
