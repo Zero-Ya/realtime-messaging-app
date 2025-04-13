@@ -11,6 +11,8 @@ export default defineConfig({
     port: PORT,
     proxy: {
       '/api': {
+        // http://localhost:3000
+        // https://realtime-messaging-app-9hpl.onrender.com
         target: 'https://realtime-messaging-app-9hpl.onrender.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\//, ''),
