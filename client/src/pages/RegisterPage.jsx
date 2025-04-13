@@ -23,7 +23,10 @@ function RegisterPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user)
         })
-        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+            return res.json()
+        })
         .then(data => {
             if (data.errors) {
                 setError(true);
