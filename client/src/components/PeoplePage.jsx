@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 
 // Assets
-import { FaUsers, FaMagnifyingGlass, FaUserCheck, FaUserXmark } from "react-icons/fa6";
-import avatar from "../assets/avatar.svg";
+import { FaUsers, FaMagnifyingGlass } from "react-icons/fa6";
 
 // Store
 import { useAuthStore } from "../store/authStore";
@@ -25,7 +24,7 @@ function PeoplePage() {
     const allUsersExcFriends = allUsers.filter((user) => !allFriendsFlat.includes(user.id))
 
     useEffect(() => {
-        fetch("/api/all-users", {
+        fetch("https://realtime-messaging-app-9hpl.onrender.com/api/all-users", {
             method: "GET"
         })
         .then(res => res.json())

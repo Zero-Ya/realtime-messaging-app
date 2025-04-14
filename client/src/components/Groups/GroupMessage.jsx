@@ -16,7 +16,7 @@ function GroupMessage({ message, messageEndRef }) {
     const [sender, setSender] = useState(null)
 
     useEffect(() => {
-        fetch(`/api/chats/users/${message.senderId}`, {
+        fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats/users/${message.senderId}`, {
             method: "GET"
         })
         .then(res => res.json())

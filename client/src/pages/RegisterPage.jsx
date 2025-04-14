@@ -15,18 +15,15 @@ function RegisterPage() {
         e.preventDefault()
         const user = { username , password };
 
-
         setIsRegistering(true);
         setError(false);
-        fetch("/api/register", {
+
+        fetch("https://realtime-messaging-app-9hpl.onrender.com/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(user)
         })
-        .then(res => {
-            console.log(res)
-            return res.json()
-        })
+        .then(res => res.json())
         .then(data => {
             if (data.errors) {
                 setError(true);

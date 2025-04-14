@@ -17,16 +17,9 @@ function LoginPage() {
         e.preventDefault()
         const user = { username, password };
 
-        // setIsLoggingIn(true);
-        // setError(false);
-
-        // fetch("/api/authUser", {
-        //     method: "GET"
-        // })
-        // .then(res => res.json())
-        // .then(data => console.log(data))
-        // .catch(err => console.log(err))
-
+        setIsLoggingIn(true);
+        setError(false);
+        
         fetch("https://realtime-messaging-app-9hpl.onrender.com/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

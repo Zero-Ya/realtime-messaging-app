@@ -17,7 +17,7 @@ function ProfileFriend({ user }) {
     function handleRemoveChat(userId) {
         setIsRemovingChat(true);
         
-        fetch(`/api/chats`, {
+        fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats`, {
             method: "DELETE",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({userId})

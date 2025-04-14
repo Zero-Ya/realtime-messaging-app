@@ -13,7 +13,7 @@ function GroupLatestMessage({ groupId }) {
     const [sender, setSender] = useState(null)
 
     useEffect(() => {
-        fetch(`/api/messages/groups/${groupId}`, {
+        fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/groups/${groupId}`, {
             method: "GET"
         })
         .then(res => res.json())
@@ -26,7 +26,7 @@ function GroupLatestMessage({ groupId }) {
 
     useEffect(() => {
         if (!latestMessage) return;
-        fetch(`/api/chats/users/${latestMessage.senderId}`, {
+        fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats/users/${latestMessage.senderId}`, {
             method: "GET"
         })
         .then(res => res.json())

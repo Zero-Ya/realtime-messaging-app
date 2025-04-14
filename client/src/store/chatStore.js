@@ -21,7 +21,7 @@ export const useChatStore = create((set, get) => ({
 
     getUserChat: async (selectedUserId) => {
         try {
-            const res = await fetch(`/api/chats/users/${selectedUserId}`);
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats/users/${selectedUserId}`);
             const data = await res.json();
             if (data.message) return;
             set({ selectedUserChat: data });
@@ -32,7 +32,7 @@ export const useChatStore = create((set, get) => ({
 
     getAllChats: async () => {
         try {
-            const res = await fetch("/api/chats");
+            const res = await fetch("https://realtime-messaging-app-9hpl.onrender.com/api/chats");
             const data = await res.json();
             if (data.message) return;
             set({ chats: data });
@@ -44,7 +44,7 @@ export const useChatStore = create((set, get) => ({
     getMessages: async (selectedChat) => {
         set({ isMessagesLoading: true });
         try {
-            const res = await fetch(`/api/messages/chats/${selectedChat}`);
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/chats/${selectedChat}`);
             const data = await res.json();
             if (data.message) return;
             set({ messages: data });
@@ -59,7 +59,7 @@ export const useChatStore = create((set, get) => ({
     getChat: async (selectedChat) => {
         const authUser = useAuthStore.getState().authUser;
         try {
-            const res = await fetch(`/api/chats/chat/${authUser.id}/${selectedChat}`);
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats/chat/${authUser.id}/${selectedChat}`);
             const data = await res.json();
             if (data.message) return;
             set({ chat: data });
@@ -71,7 +71,7 @@ export const useChatStore = create((set, get) => ({
     sendMessage: async (messageData) => {
         const { selectedChat, chat } = get();
         try {
-            const res = await fetch(`/api/messages/chats/${chat.id}/${selectedChat}`, { method: "POST", body: messageData });
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/chats/${chat.id}/${selectedChat}`, { method: "POST", body: messageData });
             const data = await res.json();
             if (data.message) return;
             // set({ messages: [...get().messages, data] });

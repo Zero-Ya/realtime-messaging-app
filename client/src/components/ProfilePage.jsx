@@ -39,7 +39,7 @@ function Profile() {
     }
 
     useEffect(() => {
-        fetch("/api/all-users", {
+        fetch("https://realtime-messaging-app-9hpl.onrender.com/api/all-users", {
             method: "GET"
         })
         .then(res => res.json())
