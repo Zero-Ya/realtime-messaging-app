@@ -2,7 +2,7 @@ import prisma from "../db/prismaClient.js";
 import cloudinary from "../lib/cloudinary.js";
 import { io } from "../lib/socket.js";
 
-createGroup = async (req, res) => {
+export async function createGroup (req, res) {
     try {
         const { groupName, membersId, groupImg } = req.body;
     
@@ -27,7 +27,7 @@ createGroup = async (req, res) => {
     }
 }
 
-getAllGroups = async (req, res) => {
+export async function getAllGroups (req, res) {
     try {
         const allGroups = await prisma.group.findMany({
             orderBy: { updatedAt: "desc" }
@@ -39,7 +39,7 @@ getAllGroups = async (req, res) => {
     }
 }
 
-updateGroupImage = async (req, res) => {
+export async function updateGroupImage (req, res) {
     try {
         const { groupImg } = req.body;
         const { groupId } = req.params;
@@ -61,7 +61,7 @@ updateGroupImage = async (req, res) => {
     }
 }
 
-updateGroupName = async (req, res) => {
+export async function updateGroupName (req, res) {
     try {
         const { groupId } = req.params;
         const { newName } = req.body;
@@ -81,7 +81,7 @@ updateGroupName = async (req, res) => {
     }
 }
 
-removeMember = async (req, res) => {
+export async function removeMember (req, res) {
     try {
         const { groupId } = req.params;
         const { newMembers } = req.body;
@@ -105,7 +105,7 @@ removeMember = async (req, res) => {
 
 // THESE TWO WORK THE SAME WAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 
-updateGroupMembers = async (req, res) => {
+export async function updateGroupMembers (req, res) {
     try {
         const { groupId } = req.params;
         const { newMembers } = req.body;
@@ -127,7 +127,7 @@ updateGroupMembers = async (req, res) => {
     }
 }
 
-deleteGroup = async (req, res) => {
+export async function deleteGroup (req, res) {
     try {
         const { groupId } = req.params;
 
@@ -151,14 +151,4 @@ deleteGroup = async (req, res) => {
         console.log("Error in deleteGroup controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
-}
-
-export default {
-    createGroup,
-    getAllGroups,
-    updateGroupImage,
-    updateGroupName,
-    removeMember,
-    updateGroupMembers,
-    deleteGroup
 }

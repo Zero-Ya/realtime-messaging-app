@@ -17,7 +17,7 @@ const validateUser = [
         .isLength({ min: 9, max: 30 }).withMessage("Password must be between 9 and 30 characters")
 ]
 
-logUserIn = async (req, res, next) => {
+export async function logUserIn (req, res, next) {
     passport.authenticate("local", (err, user, info) => {
         if (err) return next(err);
         if (!user) return res.status(401).json({ errMsg: "Incorrect username or password" });
@@ -30,38 +30,40 @@ logUserIn = async (req, res, next) => {
     })(req, res, next)
 }
 
-register = [
-    validateUser,
-    async (req, res, next) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() })
-        }
-
-        const { username, password } = req.body
-
-        bcrypt.hash(password, 10, async (err, hashedPassword) => {
-            try {
-                const user = await prisma.user.create({
-                    data: {
-                        username,
-                        password: hashedPassword
-                    }
-                })
-                if (user) {
-                    res.status(201).json(user);
-                } else {
-                    res.status(401).json({ message: "Invalid user data" });
-                }
-            } catch(err) {
-                console.log("Error in register controller", err.message);
-                return next(err);
+export function register () {
+    return register = [
+        validateUser,
+        async (req, res, next) => {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() })
             }
-        })
-    }
-]
+        
+            const { username, password } = req.body
+        
+            bcrypt.hash(password, 10, async (err, hashedPassword) => {
+                try {
+                    const user = await prisma.user.create({
+                        data: {
+                            username,
+                            password: hashedPassword
+                        }
+                    })
+                    if (user) {
+                        res.status(201).json(user);
+                    } else {
+                        res.status(401).json({ message: "Invalid user data" });
+                    }
+                } catch(err) {
+                    console.log("Error in register controller", err.message);
+                    return next(err);
+                }
+            })
+        }
+    ]
+}
 
-logOut = async (req, res) => {
+export async function logOut (req, res) {
     try {
         res.cookie("token", "", { maxAge: 0 });
         req.logout(() => res.end());
@@ -72,7 +74,7 @@ logOut = async (req, res) => {
     }
 }
 
-getAuthUser = async (req, res) => {
+export async function getAuthUser (req, res) {
     try {
         res.status(200).json(req.user)
     } catch (error) {
@@ -81,7 +83,7 @@ getAuthUser = async (req, res) => {
     }
 }
 
-getAllUsers = async (req, res) => {
+export async function getAllUsers (req, res) {
     try {
         const allUsers = await prisma.user.findMany();
         res.status(200).json(allUsers)
@@ -91,7 +93,7 @@ getAllUsers = async (req, res) => {
     }
 }
 
-updateProfile = async (req ,res) => {
+export async function updateProfile (req ,res) {
     try {
         const { profileImg } = req.body;
         const authUserId = req.user.id;
@@ -110,13 +112,4 @@ updateProfile = async (req ,res) => {
         console.log("Error in updating profile:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
-}
-
-export default {
-    logUserIn,
-    register,
-    logOut,
-    getAuthUser,
-    getAllUsers,
-    updateProfile
 }
