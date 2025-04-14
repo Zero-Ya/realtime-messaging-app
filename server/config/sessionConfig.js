@@ -1,6 +1,6 @@
-const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
-const expressSession = require("express-session");
-const prisma = require("../db/prismaClient");
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import expressSession from "express-session";
+import prisma from "../db/prismaClient";
 
 const sessionConfig = expressSession({
     cookie: {
@@ -16,4 +16,4 @@ const sessionConfig = expressSession({
     })
 })
 
-module.exports = sessionConfig;
+export default sessionConfig;

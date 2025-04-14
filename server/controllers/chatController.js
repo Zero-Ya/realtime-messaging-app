@@ -1,7 +1,7 @@
-const prisma = require("../db/prismaClient");
-const { io, getReceiverSocketId } = require("../lib/socket");
+import prisma from "../db/prismaClient";
+import { io, getReceiverSocketId } from "../lib/socket";
 
-exports.getAllChats = async (req, res) => {
+getAllChats = async (req, res) => {
     try {
         const allChats = await prisma.chat.findMany({
             where: {
@@ -18,7 +18,7 @@ exports.getAllChats = async (req, res) => {
     }
 }
 
-exports.createChat = async (req, res) => {
+createChat = async (req, res) => {
     try {
         const otherUser = await prisma.user.findUnique({
             where: { username: req.body.username }
@@ -50,7 +50,7 @@ exports.createChat = async (req, res) => {
     }
 }
 
-exports.getUserChatList = async (req, res) => {
+getUserChatList = async (req, res) => {
     try {
         const userId = parseInt(req.params.userId);
 
@@ -64,7 +64,7 @@ exports.getUserChatList = async (req, res) => {
     }
 }
 
-exports.getChat = async (req, res) => {
+getChat = async (req, res) => {
     try {
         const authUserId = parseInt(req.params.authUserId);
         const selectedUserId = parseInt(req.params.selectedUserId);
@@ -82,7 +82,7 @@ exports.getChat = async (req, res) => {
     }
 }
 
-exports.removeChat = async (req, res) => {
+removeChat = async (req, res) => {
     try {
         const { userId } = req.body;
         const authUserId = req.user.id;
@@ -111,4 +111,12 @@ exports.removeChat = async (req, res) => {
         console.log("Error in removeChat controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
+}
+
+export default {
+    getAllChats,
+    createChat,
+    getUserChatList,
+    getChat,
+    removeChat
 }

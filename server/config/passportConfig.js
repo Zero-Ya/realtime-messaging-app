@@ -1,7 +1,7 @@
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const prisma = require("../db/prismaClient");
-const bcrypt = require("bcryptjs");
+import passport from "passport";
+import LocalStrategy from ("passport-local").Strategy;
+import prisma from "../db/prismaClient";
+import bcrypt from "bcryptjs";
 
 const localStrategy = new LocalStrategy(async (username, password, done) => {
     try {

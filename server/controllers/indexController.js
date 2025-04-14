@@ -17,7 +17,7 @@ const validateUser = [
         .isLength({ min: 9, max: 30 }).withMessage("Password must be between 9 and 30 characters")
 ]
 
-exports.logUserIn = async (req, res, next) => {
+logUserIn = async (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
         if (err) return next(err);
         if (!user) return res.status(401).json({ errMsg: "Incorrect username or password" });
@@ -30,7 +30,7 @@ exports.logUserIn = async (req, res, next) => {
     })(req, res, next)
 }
 
-exports.register = [
+register = [
     validateUser,
     async (req, res, next) => {
         const errors = validationResult(req)
@@ -61,7 +61,7 @@ exports.register = [
     }
 ]
 
-exports.logOut = async (req, res) => {
+logOut = async (req, res) => {
     try {
         res.cookie("token", "", { maxAge: 0 });
         req.logout(() => res.end());
@@ -72,7 +72,7 @@ exports.logOut = async (req, res) => {
     }
 }
 
-exports.getAuthUser = async (req, res) => {
+getAuthUser = async (req, res) => {
     try {
         res.status(200).json(req.user)
     } catch (error) {
@@ -81,7 +81,7 @@ exports.getAuthUser = async (req, res) => {
     }
 }
 
-exports.getAllUsers = async (req, res) => {
+getAllUsers = async (req, res) => {
     try {
         const allUsers = await prisma.user.findMany();
         res.status(200).json(allUsers)
@@ -91,7 +91,7 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
-exports.updateProfile = async (req ,res) => {
+updateProfile = async (req ,res) => {
     try {
         const { profileImg } = req.body;
         const authUserId = req.user.id;
@@ -110,4 +110,13 @@ exports.updateProfile = async (req ,res) => {
         console.log("Error in updating profile:", error);
         res.status(500).json({ message: "Internal Server Error" });
     }
+}
+
+export default {
+    logUserIn,
+    register,
+    logOut,
+    getAuthUser,
+    getAllUsers,
+    updateProfile
 }

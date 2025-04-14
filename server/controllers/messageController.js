@@ -2,7 +2,7 @@ const prisma = require("../db/prismaClient");
 const { io, getReceiverSocketId } = require("../lib/socket");
 const cloudinary = require("../lib/cloudinary");
 
-exports.postMessage = async (req, res) => {
+postMessage = async (req, res) => {
     try {
         const chatId = parseInt(req.params.chatId);
         const senderId = req.user.id;
@@ -52,7 +52,7 @@ exports.postMessage = async (req, res) => {
     }
 }
 
-exports.postGroupMessage = async (req, res) => {
+postGroupMessage = async (req, res) => {
     try {
         const { groupId } = req.params;
         const senderId = req.user.id;
@@ -97,7 +97,7 @@ exports.postGroupMessage = async (req, res) => {
     }
 }
 
-exports.getGroupMessages = async (req, res) => {
+getGroupMessages = async (req, res) => {
     try {
         const { groupId } = req.params;
     
@@ -112,7 +112,7 @@ exports.getGroupMessages = async (req, res) => {
     }
 }
 
-exports.getChatMessages = async (req ,res) => {
+getChatMessages = async (req ,res) => {
     try {
         const authUserId = req.user.id;
         const otherUserId = parseInt(req.params.userId);
@@ -130,4 +130,11 @@ exports.getChatMessages = async (req ,res) => {
         console.log("Error in getChatMessages controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
+}
+
+export default {
+    postMessage,
+    postGroupMessage,
+    getGroupMessages,
+    getChatMessages
 }

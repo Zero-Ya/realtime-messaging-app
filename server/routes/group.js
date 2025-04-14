@@ -1,6 +1,6 @@
-const { Router } = require("express");
-const groupController = require("../controllers/groupController");
-const protectRoute = require("../middleware/authMiddleware.js");
+import { Router } from "express";
+import groupController from "../controllers/groupController";
+import protectRoute from "../middleware/authMiddleware.js";
 
 const router = Router();
 
@@ -12,4 +12,4 @@ router.put("/remove-member/:groupId", protectRoute, groupController.removeMember
 router.put("/update-members/:groupId", protectRoute, groupController.updateGroupMembers);
 router.delete("/:groupId", protectRoute, groupController.deleteGroup);
 
-module.exports = router;
+export default router;

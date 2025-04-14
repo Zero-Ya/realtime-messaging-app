@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const prisma = require("../db/prismaClient");
+import jwt from "jsonwebtoken";
+import prisma from "../db/prismaClient";
 
 const protectRoute = async (req, res, next) => {
     try {
@@ -24,4 +24,4 @@ const protectRoute = async (req, res, next) => {
     }
 }
 
-module.exports = protectRoute;
+export default protectRoute;

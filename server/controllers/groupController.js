@@ -2,7 +2,7 @@ const prisma = require("../db/prismaClient");
 const cloudinary = require("../lib/cloudinary");
 const { io } = require("../lib/socket");
 
-exports.createGroup = async (req, res) => {
+createGroup = async (req, res) => {
     try {
         const { groupName, membersId, groupImg } = req.body;
     
@@ -27,7 +27,7 @@ exports.createGroup = async (req, res) => {
     }
 }
 
-exports.getAllGroups = async (req, res) => {
+getAllGroups = async (req, res) => {
     try {
         const allGroups = await prisma.group.findMany({
             orderBy: { updatedAt: "desc" }
@@ -39,7 +39,7 @@ exports.getAllGroups = async (req, res) => {
     }
 }
 
-exports.updateGroupImage = async (req, res) => {
+updateGroupImage = async (req, res) => {
     try {
         const { groupImg } = req.body;
         const { groupId } = req.params;
@@ -61,7 +61,7 @@ exports.updateGroupImage = async (req, res) => {
     }
 }
 
-exports.updateGroupName = async (req, res) => {
+updateGroupName = async (req, res) => {
     try {
         const { groupId } = req.params;
         const { newName } = req.body;
@@ -81,7 +81,7 @@ exports.updateGroupName = async (req, res) => {
     }
 }
 
-exports.removeMember = async (req, res) => {
+removeMember = async (req, res) => {
     try {
         const { groupId } = req.params;
         const { newMembers } = req.body;
@@ -105,7 +105,7 @@ exports.removeMember = async (req, res) => {
 
 // THESE TWO WORK THE SAME WAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 
-exports.updateGroupMembers = async (req, res) => {
+updateGroupMembers = async (req, res) => {
     try {
         const { groupId } = req.params;
         const { newMembers } = req.body;
@@ -127,7 +127,7 @@ exports.updateGroupMembers = async (req, res) => {
     }
 }
 
-exports.deleteGroup = async (req, res) => {
+deleteGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
 
@@ -151,4 +151,14 @@ exports.deleteGroup = async (req, res) => {
         console.log("Error in deleteGroup controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
+}
+
+export default {
+    createGroup,
+    getAllGroups,
+    updateGroupImage,
+    updateGroupName,
+    removeMember,
+    updateGroupMembers,
+    deleteGroup
 }
