@@ -27,8 +27,7 @@ require("./config/passportConfig");
 
 app.use(
     cors({
-        // https://realtime-messaging-app-jet.vercel.app
-        origin: "http://localhost:5173",
+        origin: "https://realtime-messaging-app-jet.vercel.app",
         credentials: true,
     })
 )
