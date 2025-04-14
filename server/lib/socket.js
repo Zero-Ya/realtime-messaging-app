@@ -38,4 +38,4 @@ io.on("connection", (socket) => {
     })
 })
 
-export default { io, app ,server };
+export { io, app ,server };
