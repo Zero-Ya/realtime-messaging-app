@@ -1,5 +1,5 @@
 import { Router } from "express";
-import messageController from "../controllers/messageController";
+import messageController from "../controllers/messageController.js";
 import protectRoute from "../middleware/authMiddleware.js";
 
 const router = Router();

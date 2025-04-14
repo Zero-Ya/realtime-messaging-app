@@ -1,8 +1,8 @@
-const prisma = require("../db/prismaClient");
+const prisma = require("../db/prismaClient.js");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../lib/utils.js");
 const passport = require("passport");
-const cloudinary = require("../lib/cloudinary");
+const cloudinary = require("../lib/cloudinary.js");
 
 const { body, validationResult } = require("express-validator");
 

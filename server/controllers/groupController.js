@@ -1,6 +1,6 @@
-const prisma = require("../db/prismaClient");
-const cloudinary = require("../lib/cloudinary");
-const { io } = require("../lib/socket");
+const prisma = require("../db/prismaClient.js");
+const cloudinary = require("../lib/cloudinary.js");
+const { io } = require("../lib/socket.js");
 
 createGroup = async (req, res) => {
     try {

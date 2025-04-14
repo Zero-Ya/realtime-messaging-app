@@ -22,13 +22,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Routes
-import indexRoutes from "./routes/index";
+import indexRoutes from "./routes/index.js";
 // const indexRoutes = require("./routes/index");
-import chatRoutes from "./routes/chat";
+import chatRoutes from "./routes/chat.js";
 // const chatRoutes = require("./routes/chat");
-import messageRoutes from "./routes/message";
+import messageRoutes from "./routes/message.js";
 // const messageRoutes = require("./routes/message");
-import groupRoutes from "./routes/group";
+import groupRoutes from "./routes/group.js";
 // const groupRoutes = require("./routes/group");
 
 // Middlewares

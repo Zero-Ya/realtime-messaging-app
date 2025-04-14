@@ -1,5 +1,5 @@
 import { Router } from "express";
-import indexController from "../controllers/indexController";
+import indexController from "../controllers/indexController.js";
 import protectRoute from "../middleware/authMiddleware.js";
 
 const router = Router();

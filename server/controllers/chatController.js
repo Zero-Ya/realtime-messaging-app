@@ -1,5 +1,5 @@
-import prisma from "../db/prismaClient";
-import { io, getReceiverSocketId } from "../lib/socket";
+import prisma from "../db/prismaClient.js";
+import { io, getReceiverSocketId } from "../lib/socket.js";
 
 getAllChats = async (req, res) => {
     try {

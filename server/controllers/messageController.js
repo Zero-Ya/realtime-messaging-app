@@ -1,6 +1,6 @@
-const prisma = require("../db/prismaClient");
-const { io, getReceiverSocketId } = require("../lib/socket");
-const cloudinary = require("../lib/cloudinary");
+const prisma = require("../db/prismaClient.js");
+const { io, getReceiverSocketId } = require("../lib/socket.js");
+const cloudinary = require("../lib/cloudinary.js");
 
 postMessage = async (req, res) => {
     try {
