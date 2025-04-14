@@ -30,37 +30,36 @@ export async function logUserIn (req, res, next) {
     })(req, res, next)
 }
 
-export function register () {
-    [ validateUser,
-        async (req, res, next) => {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() })
-            }
-        
-            const { username, password } = req.body
-        
-            bcrypt.hash(password, 10, async (err, hashedPassword) => {
-                try {
-                    const user = await prisma.user.create({
-                        data: {
-                            username,
-                            password: hashedPassword
-                        }
-                    })
-                    if (user) {
-                        res.status(201).json(user);
-                    } else {
-                        res.status(401).json({ message: "Invalid user data" });
-                    }
-                } catch(err) {
-                    console.log("Error in register controller", err.message);
-                    return next(err);
-                }
-            })
+
+export default register = [ validateUser,
+    async (req, res, next) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
         }
-    ]
-}
+    
+        const { username, password } = req.body
+    
+        bcrypt.hash(password, 10, async (err, hashedPassword) => {
+            try {
+                const user = await prisma.user.create({
+                    data: {
+                        username,
+                        password: hashedPassword
+                    }
+                })
+                if (user) {
+                    res.status(201).json(user);
+                } else {
+                    res.status(401).json({ message: "Invalid user data" });
+                }
+            } catch(err) {
+                console.log("Error in register controller", err.message);
+                return next(err);
+            }
+        })
+    }
+]
 
 export async function logOut (req, res) {
     try {

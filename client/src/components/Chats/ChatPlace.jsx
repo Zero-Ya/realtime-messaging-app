@@ -40,7 +40,7 @@ function ChatPlace({ showChatState }) {
     
 
     return (
-        <div className={`${!showChat ? 'hidden' : 'flex'} w-full h-dvh md:flex flex-col gap-4 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg`}>
+        <div className={`${!showChat ? 'hidden' : 'flex'} w-full h-dvh lg:h-vh md:flex flex-col gap-4 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg`}>
             {(selectedUserChat?.id && !isMessagesLoading) &&
             <div className="flex items-center gap-3">
                 <FaArrowLeft className="block md:hidden size-5" onClick={() => setShowChat(false)} />
