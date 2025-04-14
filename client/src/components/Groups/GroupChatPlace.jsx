@@ -52,7 +52,7 @@ function GroupChatPlace({ showGroupChatState, showGroupInfoState }) {
             </div>}
 
             <div className="h-full flex flex-col justify-between gap-4">
-                <div className={`relative h-[calc(100dvh-9rem)]`}>
+                <div className={`relative h-[calc(100vh-9rem)]`}>
                     {!isGroupMessagesLoading && <img className="absolute w-full h-full object-cover opacity-50 inset-0 rounded-lg" src={cool_background} />}
 
                     <div className={`h-full overflow-y-auto p-4 relative flex flex-col gap-6 ${isGroupMessagesLoading || groupMessages.length === 0 ? `justify-center` : `justify-normal`}`}>

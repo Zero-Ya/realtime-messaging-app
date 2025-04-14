@@ -17,7 +17,7 @@ function Navbar({ navSelectionState }) {
 
     return (
         <>
-        <div className="w-10 sticky top-0 left-0 sm:w-14 md:w-28 lg:w-36 h-screen flex flex-col justify-between px-2 py-4 text-white text-base lg:text-lg">
+        <div className="w-10 sticky top-0 left-0 sm:w-14 md:w-28 lg:w-36 h-dvh flex flex-col justify-between px-2 py-4 text-white text-base lg:text-lg">
             <div className="flex flex-col items-center md:items-baseline gap-4">
                 <div onClick={() => setNavSelection("chat")} className="flex items-center gap-2 cursor-pointer hover:text-slate-400">
                     <FaRegMessage className="size-6 lg:size-8" />

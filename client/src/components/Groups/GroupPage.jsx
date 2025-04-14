@@ -97,7 +97,7 @@ function GroupPage() {
 
             {/*  */}
 
-            <div className={`${!showGroupChat ? 'hidden' : 'flex'} w-full md:flex flex-col gap-4 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg`}>
+            <div className={`${!showGroupChat ? 'hidden' : 'flex'} w-full h-dvh md:flex flex-col gap-4 my-2 py-2 px-4 bg-slate-900 text-white rounded-lg`}>
                 {addGroup && <AddGroupForm setAddGroup={setAddGroup} setShowGroupChat={setShowGroupChat}/>}
                 {(!addGroup && selectedGroup !== null) && <GroupChatPlace showGroupChatState={[showGroupChat, setShowGroupChat]} showGroupInfoState={[showGroupInfo, setShowGroupInfo]} />}
             </div>
