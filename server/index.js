@@ -1,22 +1,35 @@
 // Modules
-const express = require("express");
-const { app, server } = require("./lib/socket.js");
+import express from "express";
+// const express = require("express");
 
-const passport = require("passport");
-const sessionConfig = require("./config/sessionConfig");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+import { app, server } from "./lib/socket.js";
+// const { app, server } = require("./lib/socket.js");
 
-const path = require("path");
+import passport from "passport";
+// const passport = require("passport");
+import sessionConfig from "./config/sessionConfig";
+// const sessionConfig = require("./config/sessionConfig");
+import cors from "cors";
+// const cors = require("cors");
+import cookieParser from "cookie-parser";
+// const cookieParser = require("cookie-parser");
+
+import path from "path";
+// const path = require("path");
 const __dirname = path.resolve();
 
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 // Routes
-const indexRoutes = require("./routes/index");
-const chatRoutes = require("./routes/chat");
-const messageRoutes = require("./routes/message");
-const groupRoutes = require("./routes/group");
+import indexRoutes from "./routes/index";
+// const indexRoutes = require("./routes/index");
+import chatRoutes from "./routes/chat";
+// const chatRoutes = require("./routes/chat");
+import messageRoutes from "./routes/message";
+// const messageRoutes = require("./routes/message");
+import groupRoutes from "./routes/group";
+// const groupRoutes = require("./routes/group");
 
 // Middlewares
 app.use(sessionConfig);
