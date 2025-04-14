@@ -39,6 +39,11 @@ exports.createChat = async (req, res) => {
             }
         })
         res.status(200).json(newChat)
+
+        const receiverSocketId = getReceiverSocketId(otherUser.id)
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("refreshChats", { msg: "Refreshing..." });
+        }
     } catch (error) {
         console.log("Error in createChat controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
@@ -98,7 +103,7 @@ exports.removeChat = async (req, res) => {
         })
         res.status(200).json(delChat)
     
-        const receiverSocketId = getReceiverSocketId(receiverId)
+        const receiverSocketId = getReceiverSocketId(userId)
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("refreshChats", { msg: "Refreshing..." });
         }
