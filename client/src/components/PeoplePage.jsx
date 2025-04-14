@@ -21,7 +21,7 @@ function PeoplePage() {
     const [filteredUsers, setFilteredUsers] = useState([])
     const [query, setQuery] = useState("");
 
-    const allUsersExcFriends = allUsers.filter((user) => !allFriendsFlat.includes(user.id))
+    const allUsersExcFriends = allUsers?.filter((user) => !allFriendsFlat.includes(user.id))
 
     useEffect(() => {
         fetch("https://realtime-messaging-app-9hpl.onrender.com/api/all-users", {
