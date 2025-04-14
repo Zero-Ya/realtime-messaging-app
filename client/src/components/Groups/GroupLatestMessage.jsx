@@ -14,7 +14,8 @@ function GroupLatestMessage({ groupId }) {
 
     useEffect(() => {
         fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/groups/${groupId}`, {
-            method: "GET"
+            method: "GET",
+            credentials: "include"
         })
         .then(res => res.json())
         .then(data => {
@@ -27,7 +28,8 @@ function GroupLatestMessage({ groupId }) {
     useEffect(() => {
         if (!latestMessage) return;
         fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats/users/${latestMessage.senderId}`, {
-            method: "GET"
+            method: "GET",
+            credentials: "include"
         })
         .then(res => res.json())
         .then(data => setSender(data))

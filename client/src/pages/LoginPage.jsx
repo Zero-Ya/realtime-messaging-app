@@ -23,6 +23,7 @@ function LoginPage() {
         fetch("https://realtime-messaging-app-9hpl.onrender.com/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(user)
         })
         .then(res => res.json())

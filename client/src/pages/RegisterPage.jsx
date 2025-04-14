@@ -21,6 +21,7 @@ function RegisterPage() {
         fetch("https://realtime-messaging-app-9hpl.onrender.com/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(user)
         })
         .then(res => res.json())

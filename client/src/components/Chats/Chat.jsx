@@ -25,7 +25,8 @@ function Chat({ userId, setShowChat }) {
     useEffect(() => {
         setIsLoading(true);
         fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats/users/${userId}`, {
-            method: "GET"
+            method: "GET",
+            credentials: "include"
         })
         .then(res => res.json())
         .then(data => {

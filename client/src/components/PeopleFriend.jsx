@@ -22,6 +22,7 @@ function PeopleFriend({ user }) {
         fetch("https://realtime-messaging-app-9hpl.onrender.com/api/chats", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ username })
         })
         .then(res => res.json())

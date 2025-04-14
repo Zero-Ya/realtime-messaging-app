@@ -19,6 +19,7 @@ function ProfileFriend({ user }) {
         
         fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats`, {
             method: "DELETE",
+            credentials: "include",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({userId})
         })

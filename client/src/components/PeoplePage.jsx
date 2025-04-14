@@ -25,7 +25,8 @@ function PeoplePage() {
 
     useEffect(() => {
         fetch("https://realtime-messaging-app-9hpl.onrender.com/api/all-users", {
-            method: "GET"
+            method: "GET",
+            credentials: "include"
         })
         .then(res => res.json())
         .then(data => {

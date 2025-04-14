@@ -29,7 +29,7 @@ export const useGroupStore = create((set, get) => ({
 
         set({ isCreatingGroup: true });
         try {
-            const res = await fetch("https://realtime-messaging-app-9hpl.onrender.com/api/groups/", { method: "POST", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
+            const res = await fetch("https://realtime-messaging-app-9hpl.onrender.com/api/groups/", { method: "POST", credentials: "include", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
             const data = await res.json();
             if (data.message) return;
             get().getAllGroups();
@@ -46,7 +46,7 @@ export const useGroupStore = create((set, get) => ({
 
         set({ isRemovingMember: true });
         try {
-            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/remove-member/${groupId}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/remove-member/${groupId}`, { method: "PUT", credentials: "include", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) });
             const data = await res.json();
             if (data.message) return;
             if (type === "leave") set({ selectedGroup: null })
@@ -65,7 +65,7 @@ export const useGroupStore = create((set, get) => ({
 
         set({ isUpdatingMembers: true });
         try {
-            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/update-members/${groupId}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) })
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/update-members/${groupId}`, { method: "PUT", credentials: "include", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(bodyData) })
             const data = await res.json();
             if (data.message) return;
             set({ selectedGroup: data });
@@ -95,7 +95,7 @@ export const useGroupStore = create((set, get) => ({
     sendGroupMessage: async (messageData) => {
         const { selectedGroup } = get();
         try {
-            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/groups/${selectedGroup.id}`, { method: "POST", body: messageData })
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/groups/${selectedGroup.id}`, { method: "POST", credentials: "include", body: messageData })
             const data = await res.json();
             if (data.message) return;
             // set({ groupMessages: [...get().groupMessages, data] });
@@ -110,7 +110,7 @@ export const useGroupStore = create((set, get) => ({
 
         set({ isGroupMessagesLoading: true });
         try {
-            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/groups/${selectedGroup.id}`);
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/groups/${selectedGroup.id}`, { credentials: "include" });
             const data = await res.json();
             if (data.message) return;
             set({ groupMessages: data });
@@ -125,7 +125,7 @@ export const useGroupStore = create((set, get) => ({
         const { selectedGroup } = get();
         set({ isUpdatingGroupImage: true });
         try {
-            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/update-image/${selectedGroup?.id}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/update-image/${selectedGroup?.id}`, { method: "PUT", credentials: "include", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             const groupData = await res.json();
             if (groupData.message) return;
             set({ selectedGroup: groupData })
@@ -140,7 +140,7 @@ export const useGroupStore = create((set, get) => ({
     updateGroupName: async (data) => {
         const { selectedGroup } = get();
         try {
-            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/update-name/${selectedGroup?.id}`, { method: "PUT", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/update-name/${selectedGroup?.id}`, { method: "PUT", credentials: "include", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             const groupData = await res.json();
             if (groupData.message) return;
             console.log(groupData)
@@ -154,7 +154,7 @@ export const useGroupStore = create((set, get) => ({
     deleteGroup: async (groupId) => {
         set({ isDeletingGroup: true });
         try {
-            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/${groupId}` , { method: "DELETE" })
+            const res = await fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/groups/${groupId}` , { method: "DELETE", credentials: "include" })
             const data = await res.json();
             if (data.message) return;
             set({ selectedGroup: null });

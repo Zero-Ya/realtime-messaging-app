@@ -26,7 +26,6 @@ exports.logUserIn = async (req, res, next) => {
             generateToken(user.id, res);
             res.status(200).json(user);
         })
-        console.log("Cookie 1:", req.cookies)
 
     })(req, res, next)
 }
@@ -50,7 +49,6 @@ exports.register = [
                     }
                 })
                 if (user) {
-                    // generateToken(user.id, res);
                     res.status(201).json(user);
                 } else {
                     res.status(401).json({ message: "Invalid user data" });
@@ -76,7 +74,6 @@ exports.logOut = async (req, res) => {
 
 exports.getAuthUser = async (req, res) => {
     try {
-        console.log("Cookie 2:", req.cookies)
         res.status(200).json(req.user)
     } catch (error) {
         console.log("Error in getAuthUser controller", error.message);
