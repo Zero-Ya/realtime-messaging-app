@@ -89,6 +89,8 @@ function GroupPage() {
                             </div>
                         </div>
                     </div>)}
+
+                    {filteredGroups.length === 0 &&  <div className="flex justify-center text-xl lg:text-2xl font-semibold">No groups</div>}
                 </div>
                 
             </div>

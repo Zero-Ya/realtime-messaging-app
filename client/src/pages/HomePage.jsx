@@ -46,7 +46,8 @@ function HomePage() {
     )
 
     return (
-        (authUser && chats.length !== 0) &&
+        // (authUser && chats.length !== 0) Just in case something goes wrong
+        (authUser) &&
         <div className="w-full flex gap-2">
             <ChatList showChatState={[showChat, setShowChat]} />
             <ChatPlace showChatState={[showChat, setShowChat]} />

@@ -53,6 +53,8 @@ function ChatList({ showChatState }) {
             <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto flex flex-col">
                 {filteredUsers?.map((chat) => <Chat key={chat} userId={chat} setShowChat={setShowChat} />)}
             </div>
+
+            {chats.length === 0 && <div className="flex justify-center text-xl lg:text-2xl font-semibold">No contacts</div>}
         </div>
     )
 }
