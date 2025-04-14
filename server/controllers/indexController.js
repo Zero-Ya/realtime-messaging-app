@@ -23,6 +23,7 @@ exports.logUserIn = async (req, res, next) => {
         if (!user) return res.status(401).json({ errMsg: "Incorrect username or password" });
         req.logIn(user, (err) => {
             if (err) return next(err);
+            console.log("GOT HERE!")
             generateToken(user.id, res);
             res.status(200).json(user);
         })
