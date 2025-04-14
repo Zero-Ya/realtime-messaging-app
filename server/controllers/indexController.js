@@ -1,10 +1,10 @@
-const prisma = require("../db/prismaClient.js");
-const bcrypt = require("bcryptjs");
-const generateToken = require("../lib/utils.js");
-const passport = require("passport");
-const cloudinary = require("../lib/cloudinary.js");
+import prisma from "../db/prismaClient.js";
+import bcrypt from "bcryptjs";
+import generateToken from "../lib/utils.js";
+import passport from "passport";
+import cloudinary from "../lib/cloudinary.js";
 
-const { body, validationResult } = require("express-validator");
+import { body, validationResult } from "express-validator";
 
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 20 characters.";

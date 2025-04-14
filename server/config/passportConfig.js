@@ -1,5 +1,5 @@
 import passport from "passport";
-import LocalStrategy from ("passport-local").Strategy;
+import { Strategy as LocalStrategy } from "passport-local";
 import prisma from "../db/prismaClient.js";
 import bcrypt from "bcryptjs";
 
