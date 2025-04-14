@@ -7,7 +7,7 @@ import { app, server } from "./lib/socket.js";
 
 import passport from "passport";
 // const passport = require("passport");
-import sessionConfig from "./config/sessionConfig";
+import sessionConfig from "./config/sessionConfig.js";
 // const sessionConfig = require("./config/sessionConfig");
 import cors from "cors";
 // const cors = require("cors");
@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 
-import("./config/passportConfig");
+import "./config/passportConfig";
 
 app.use(
     cors({
