@@ -70,14 +70,14 @@ function Chat({ userId, setShowChat }) {
                     <img className="size-10 md:size-8 lg:size-10 rounded-full object-cover border-2 bg-slate-800" src={user.profileImg || avatar} />
                     <div className="flex flex-col gap-1 w-40 sm:w-96 md:w-12 lg:w-28 xl:w-36">
                         <div className="text-lg lg:text-xl">{user.username}</div>
-                        {latestMessage === null ? <div className="text-slate-300 text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">No messages</div>
+                        {(latestMessage === undefined || latestMessage === null ) ? <div className="text-slate-300 text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">No messages</div>
                         :
                         latestMessage?.senderId === userId ?
-                        (latestMessage.text === "" && latestMessage.file) ?
+                        (latestMessage?.text === "" && latestMessage?.file) ?
                         <div className="text-slate-300 text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">{user.username} sent an image</div> :
                         <div className="text-slate-300 text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">{user.username}: {latestMessage?.text}</div>
                         :
-                        (latestMessage.text === "" && latestMessage.file) ?
+                        (latestMessage?.text === "" && latestMessage?.file) ?
                         <div className="text-slate-300 text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">You sent an image</div> :
                         <div className="text-slate-300 text-sm overflow-hidden whitespace-nowrap overflow-ellipsis">You: {latestMessage?.text}</div>}
                     </div>
