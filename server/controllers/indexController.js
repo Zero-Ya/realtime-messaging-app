@@ -31,8 +31,7 @@ export async function logUserIn (req, res, next) {
 }
 
 export function register () {
-    return register = [
-        validateUser,
+    [ validateUser,
         async (req, res, next) => {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
