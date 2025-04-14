@@ -30,8 +30,7 @@ export async function logUserIn (req, res, next) {
     })(req, res, next)
 }
 
-
-export default register = [ validateUser,
+export const register = [ validateUser,
     async (req, res, next) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
