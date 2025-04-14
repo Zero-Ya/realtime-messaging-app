@@ -10,6 +10,7 @@ const generateToken = (userId, res) => {
         httpOnly: true,
         sameSite: "None",
         secure: process.env.NODE_ENV !== "development",
+        partitioned: true
     })
 
     return token;
