@@ -43,11 +43,8 @@ import "./config/passportConfig.js";
 
 app.use(
     cors({
-        // https://realtime-messaging-app-jet.vercel.app
-        // http://localhost:5173
-        origin: "https://realtime-messaging-app-jet.vercel.app",
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE"]
+        origin: "https://realtime-messaging-app-0.onrender.com",
+        credentials: true
     })
 )
 

@@ -16,7 +16,7 @@ export const useAuthStore = create((set, get) => ({
     checkAuth: async () => {
         set({ isCheckingAuth: true })
         try {
-            const res = await fetch("https://realtime-messaging-app-9hpl.onrender.com/api/authUser", { credentials: "include" });
+            const res = await fetch("https://realtime-messaging-app-0.onrender.com/api/authUser", { credentials: "include" });
             const data = await res.json();
             if (data.message) return;
             set({ authUser: data });
@@ -32,7 +32,7 @@ export const useAuthStore = create((set, get) => ({
     getAllUsers: async () => {
         set({ isGettingAllUsers: true });
         try {
-            const res = await fetch("https://realtime-messaging-app-9hpl.onrender.com/api/all-users", { credentials: "include" });
+            const res = await fetch("https://realtime-messaging-app-0.onrender.com/api/all-users", { credentials: "include" });
             const data = await res.json();
             if (data.message) return;
             set({ allUsers: data });
@@ -57,7 +57,7 @@ export const useAuthStore = create((set, get) => ({
 
         set({ isLoggingOut: true });
         try {
-            await fetch("https://realtime-messaging-app-9hpl.onrender.com/api/logout", { credentials: "include" });
+            await fetch("https://realtime-messaging-app-0.onrender.com/api/logout", { credentials: "include" });
             set({ authUser: null });
             get().disconnectSocket();
 
@@ -72,7 +72,7 @@ export const useAuthStore = create((set, get) => ({
     updateProfile: async (data) => {
         set({ isUpdatingProfile: true });
         try {
-            const res = await fetch("https://realtime-messaging-app-9hpl.onrender.com/api/update-profile", { method: "PUT", credentials: "include", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            const res = await fetch("https://realtime-messaging-app-0.onrender.com/api/update-profile", { method: "PUT", credentials: "include", headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             const authUserData = await res.json();
             if (data.message) return;
             set({ authUser: authUserData });
@@ -89,7 +89,7 @@ export const useAuthStore = create((set, get) => ({
 
         // http://localhost:3000
         // https://realtime-messaging-app-9hpl.onrender.com
-        const socket = io("https://realtime-messaging-app-9hpl.onrender.com", {
+        const socket = io("https://realtime-messaging-app-0.onrender.com", {
             query: {
                 userId: authUser.id
             }

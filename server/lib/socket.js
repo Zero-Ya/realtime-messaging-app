@@ -7,9 +7,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        // http://localhost:5173
-        // https://realtime-messaging-app-jet.vercel.app
-        origin: ["https://realtime-messaging-app-jet.vercel.app"]
+        origin: ["https://realtime-messaging-app-0.onrender.com"]
     }
 })
 

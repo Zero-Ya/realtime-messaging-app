@@ -20,7 +20,7 @@ function LoginPage() {
         setIsLoggingIn(true);
         setError(false);
         
-        fetch("https://realtime-messaging-app-9hpl.onrender.com/api/login", {
+        fetch("https://realtime-messaging-app-0.onrender.com/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",

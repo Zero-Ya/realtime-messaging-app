@@ -18,7 +18,7 @@ function RegisterPage() {
         setIsRegistering(true);
         setError(false);
 
-        fetch("https://realtime-messaging-app-9hpl.onrender.com/api/register", {
+        fetch("https://realtime-messaging-app-0.onrender.com/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",

@@ -24,7 +24,7 @@ function Chat({ userId, setShowChat }) {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/chats/users/${userId}`, {
+        fetch(`https://realtime-messaging-app-0.onrender.com/api/chats/users/${userId}`, {
             method: "GET",
             credentials: "include"
         })
@@ -37,7 +37,7 @@ function Chat({ userId, setShowChat }) {
     }, [])
 
     useEffect(() => {
-        fetch(`https://realtime-messaging-app-9hpl.onrender.com/api/messages/chats/${userId}`, {
+        fetch(`https://realtime-messaging-app-0.onrender.com/api/messages/chats/${userId}`, {
             method: "GET"
         })
         .then(res => res.json())

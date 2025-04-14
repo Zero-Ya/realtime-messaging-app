@@ -24,7 +24,7 @@ function PeoplePage() {
     const allUsersExcFriends = allUsers?.filter((user) => !allFriendsFlat.includes(user.id))
 
     useEffect(() => {
-        fetch("https://realtime-messaging-app-9hpl.onrender.com/api/all-users", {
+        fetch("https://realtime-messaging-app-0.onrender.com/api/all-users", {
             method: "GET",
             credentials: "include"
         })
